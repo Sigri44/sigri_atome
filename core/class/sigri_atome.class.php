@@ -21,14 +21,23 @@
 	// *****************
 	// * Configuration *
 	// *****************
+	const URL_API = "https://esoftlink.esoftthings.com";
+	const API_LOGIN = "/api/user/login.json";
+	const API_DATA = "/graph-query-last-consumption";
+	const URL_LOGIN = self::URL_API . self::API_LOGIN;
+	const RESSOURCES_DIR = __DIR__.'/ressources/';
+	const COOKIES_FILE = self::RESSOURCES_DIR.'cookies.txt';
+
+	/*
 	$URL_API = "https://esoftlink.esoftthings.com";
 	$API_LOGIN = "/api/user/login.json";
 	$API_DATA = "/graph-query-last-consumption";
 	$URL_LOGIN = $URL_API . $API_LOGIN;
 	$RESSOURCES_DIR = __DIR__.'/ressources/';
 	$COOKIES_FILE = $RESSOURCES_DIR.'cookies.txt';
-	
-	class sigri_atome extends eqLogic {
+	*/
+
+	class sigri_atome extends eqLogic {		
 		public function preUpdate() {
 
 		}
@@ -77,12 +86,12 @@
 		public function Call_Atome_Login() {
 			// Debug complet de la fonction
 			log::add('sigri_atome', 'debug', '----------Call_Atome_Login----------');
-			log::add('sigri_atome', 'debug', '$URL_API : '.$URL_API);
-			log::add('sigri_atome', 'debug', '$URL_API : '.$API_LOGIN);
-			log::add('sigri_atome', 'debug', '$URL_API : '.$API_DATA);
-			log::add('sigri_atome', 'debug', '$URL_API : '.$URL_LOGIN);
-			log::add('sigri_atome', 'debug', '$URL_API : '.$RESSOURCES_DIR);
-			log::add('sigri_atome', 'debug', '$URL_API : '.$COOKIES_FILE);
+			log::add('sigri_atome', 'debug', '$URL_API : '.self::URL_API);
+			log::add('sigri_atome', 'debug', '$URL_API : '.self::API_LOGIN);
+			log::add('sigri_atome', 'debug', '$URL_API : '.self::API_DATA);
+			log::add('sigri_atome', 'debug', '$URL_API : '.self::URL_LOGIN);
+			log::add('sigri_atome', 'debug', '$URL_API : '.self::RESSOURCES_DIR);
+			log::add('sigri_atome', 'debug', '$URL_API : '.self::COOKIES_FILE);
 			log::add('sigri_atome', 'debug', '----------FinConfig----------');
 
 			// *******************************
@@ -96,7 +105,7 @@
 			curl_setopt($curl, CURLOPT_COOKIESESSION, true); 
 	
 			curl_setopt_array($curl, array(
-				CURLOPT_URL => $URL_LOGIN,
+				CURLOPT_URL => self::URL_LOGIN,
 				CURLOPT_RETURNTRANSFER => true,
 				CURLOPT_ENCODING => "",
 				CURLOPT_MAXREDIRS => 10,
@@ -112,16 +121,16 @@
 	
 			// Enregistrement du cookie
 			log::add('sigri_atome', 'debug', 'Enregistrement du cookie');
-			curl_setopt($curl, CURLOPT_COOKIEJAR, $COOKIES_FILE);
-			log::add('sigri_atome', 'debug', '$COOKIES_FILE : '.$COOKIES_FILE);
+			curl_setopt($curl, CURLOPT_COOKIEJAR, self::COOKIES_FILE);
+			log::add('sigri_atome', 'debug', '$COOKIES_FILE : '.self::COOKIES_FILE);
 	
 			log::add('sigri_atome', 'debug', 'Récupération de la connexion API');
 			$response = curl_exec($curl);
 	
 			// Enregistrement de la connexion au format JSON
 			log::add('sigri_atome', 'debug', 'Enregistrement de la connexion au format JSON');
-			file_put_contents($JSON_CONNECTION, $response);
-			log::add('sigri_atome', 'debug', '$JSON_CONNECTION : '.$JSON_CONNECTION);
+			file_put_contents(self::JSON_CONNECTION, $response);
+			log::add('sigri_atome', 'debug', '$JSON_CONNECTION : '.self::JSON_CONNECTION);
 
 			// Récupération des erreurs curl
 			$err = curl_error($curl);
@@ -139,12 +148,12 @@
 		public function Call_Atome_API($response, $period) {
 			// Debug complet de la fonction
 			log::add('sigri_atome', 'debug', '----------Call_Atome_API----------');
-			log::add('sigri_atome', 'debug', '$URL_API : '.$URL_API);
-			log::add('sigri_atome', 'debug', '$URL_API : '.$API_LOGIN);
-			log::add('sigri_atome', 'debug', '$URL_API : '.$API_DATA);
-			log::add('sigri_atome', 'debug', '$URL_API : '.$URL_LOGIN);
-			log::add('sigri_atome', 'debug', '$URL_API : '.$RESSOURCES_DIR);
-			log::add('sigri_atome', 'debug', '$URL_API : '.$COOKIES_FILE);
+			log::add('sigri_atome', 'debug', '$URL_API : '.self::URL_API);
+			log::add('sigri_atome', 'debug', '$URL_API : '.self::API_LOGIN);
+			log::add('sigri_atome', 'debug', '$URL_API : '.self::API_DATA);
+			log::add('sigri_atome', 'debug', '$URL_API : '.self::URL_LOGIN);
+			log::add('sigri_atome', 'debug', '$URL_API : '.self::RESSOURCES_DIR);
+			log::add('sigri_atome', 'debug', '$URL_API : '.self::COOKIES_FILE);
 			log::add('sigri_atome', 'debug', '----------FinConfig----------');
 			
 			// ************

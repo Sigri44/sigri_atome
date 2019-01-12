@@ -47,9 +47,9 @@
 		}
 
 		public static function cronHourly() {
+			log::add('sigri_atome', 'debug', '----------Lancement du cronHourly----------');
 			$eqLogics = eqLogic::byType('sigri_atome');
 			foreach ($eqLogics as $eqLogic) {
-				log::add('sigri_atome', 'debug', '----------Lancement du cronHourly----------');
 				if ($sigri_atome->getIsEnable() == 1) {
 					if (!empty($sigri_atome->getConfiguration('identifiant')) && !empty($sigri_atome->getConfiguration('password'))) {
 						$json_connection = $sigri_atome->Call_Atome_Login();
@@ -61,9 +61,9 @@
 		}
 
 		public static function cronDaily() {
+			log::add('sigri_atome', 'debug', '----------Lancement du cronDaily----------');
 			$eqLogics = eqLogic::byType('sigri_atome');
 			foreach ($eqLogics as $eqLogic) {
-				log::add('sigri_atome', 'debug', '----------Lancement du cronDaily----------');
 				if ($sigri_atome->getIsEnable() == 1) {
 					if (!empty($sigri_atome->getConfiguration('identifiant')) && !empty($sigri_atome->getConfiguration('password'))) {
 						$json_connection = $sigri_atome->Call_Atome_Login();

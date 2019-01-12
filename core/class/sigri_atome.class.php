@@ -52,9 +52,9 @@
 			foreach ($eqLogics as $eqLogic) {
 				if ($eqLogic->getIsEnable() == 1) {
 					if (!empty($eqLogic->getConfiguration('identifiant')) && !empty($eqLogic->getConfiguration('password'))) {
-						$json_connection = $sigri_atome->Call_Atome_Login();
+						$json_connection = $eqLogic->Call_Atome_Login();
 						$period = "day";
-						$sigri_atome->Call_Atome_API($json_connection, $period);
+						$eqLogic->Call_Atome_API($json_connection, $period);
 					}
 				}
 			}
@@ -66,9 +66,9 @@
 			foreach ($eqLogics as $eqLogic) {
 				if ($eqLogic->getIsEnable() == 1) {
 					if (!empty($eqLogic->getConfiguration('identifiant')) && !empty($eqLogic->getConfiguration('password'))) {
-						$json_connection = $sigri_atome->Call_Atome_Login();
+						$json_connection = $eqLogic->Call_Atome_Login();
 						$period = "month";
-						$sigri_atome->Call_Atome_API($json_connection, $period);
+						$eqLogic->Call_Atome_API($json_connection, $period);
 					}
 				}
 			}

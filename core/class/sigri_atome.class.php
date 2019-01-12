@@ -46,8 +46,9 @@
 			
 		}
 
-		public  static function cronHourly() {
-			foreach (eqLogic::byType('sigri_atome', true) as $sigri_atome) {
+		public static function cronHourly() {
+			$eqLogics = eqLogic::byType('sigri_atome');
+			foreach ($eqLogics as $eqLogic) {
 				log::add('sigri_atome', 'debug', '----------Lancement du cronHourly----------');
 				if ($sigri_atome->getIsEnable() == 1) {
 					if (!empty($sigri_atome->getConfiguration('identifiant')) && !empty($sigri_atome->getConfiguration('password'))) {
@@ -59,8 +60,9 @@
 			}
 		}
 
-		public  static function cronDaily() {
-			foreach (eqLogic::byType('sigri_atome', true) as $sigri_atome) {
+		public static function cronDaily() {
+			$eqLogics = eqLogic::byType('sigri_atome');
+			foreach ($eqLogics as $eqLogic) {
 				log::add('sigri_atome', 'debug', '----------Lancement du cronDaily----------');
 				if ($sigri_atome->getIsEnable() == 1) {
 					if (!empty($sigri_atome->getConfiguration('identifiant')) && !empty($sigri_atome->getConfiguration('password'))) {
@@ -289,7 +291,7 @@
 			}
 		}
 	}
-	
+
 	class sigri_atomeCmd extends cmd {
 		public function execute($_options = array()) {
 

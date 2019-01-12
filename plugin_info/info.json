@@ -1,0 +1,14 @@
+{
+	"id" : "sigri_atome",
+	"name" : "Sigri Atome",
+	"licence" : "AGPL",
+	"author" : "Sigri44",
+	"require" : "3.0",
+    "version": "0.1",
+	"category" : "energy",
+	"hasDependency" : false,
+	"hasOwnDeamon" : false,
+	"maxDependancyInstallTime" : 0,
+    "documentation": "https://github.com/Sigri44/sigri_atome",
+    "changelog": "https://github.com/Sigri44/sigri_atome"
+}

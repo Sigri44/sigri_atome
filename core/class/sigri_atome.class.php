@@ -51,7 +51,7 @@
 			$eqLogics = eqLogic::byType('sigri_atome');
 			foreach ($eqLogics as $eqLogic) {
 				if ($eqLogic->getIsEnable() == 1) {
-					if (!empty($sigri_atome->getConfiguration('identifiant')) && !empty($sigri_atome->getConfiguration('password'))) {
+					if (!empty($eqLogic->getConfiguration('identifiant')) && !empty($eqLogic->getConfiguration('password'))) {
 						$json_connection = $sigri_atome->Call_Atome_Login();
 						$period = "day";
 						$sigri_atome->Call_Atome_API($json_connection, $period);
@@ -65,7 +65,7 @@
 			$eqLogics = eqLogic::byType('sigri_atome');
 			foreach ($eqLogics as $eqLogic) {
 				if ($eqLogic->getIsEnable() == 1) {
-					if (!empty($sigri_atome->getConfiguration('identifiant')) && !empty($sigri_atome->getConfiguration('password'))) {
+					if (!empty($eqLogic->getConfiguration('identifiant')) && !empty($eqLogic->getConfiguration('password'))) {
 						$json_connection = $sigri_atome->Call_Atome_Login();
 						$period = "month";
 						$sigri_atome->Call_Atome_API($json_connection, $period);

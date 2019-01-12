@@ -22,27 +22,12 @@
 		exec('sudo chmod 777'.dirname(__FILE__).'/install.sql');
 		$sql = file_get_contents(dirname(__FILE__).'/install.sql');
 		DB::Prepare($sql, array(), DB::FETCH_TYPE_ROW);
-
 		sigri_atome::CronIsInstall();
 	}
 	
 	function sigri_atome_update() {
-		//$random_minutes = rand(1, 59);
-		//$crontab_schedule = $random_minutes." * * * *";
-		$crontab_schedule = "0 * * * *";
-		$cron = cron::byClassAndFunction('sigri_atome', 'launch_sigri_atome');
-		if (!is_object($cron)) {
-			$cron = new cron();
-			$cron->setClass('sigri_atome');
-			$cron->setFunction('launch_sigri_atome');
-			$cron->setEnable(1);
-			$cron->setDeamon(0);
-			$cron->setSchedule($crontab_schedule);
-			$cron->save();
-		}
-		$cron->setSchedule($crontab_schedule);
-		$cron->save();
-		$cron->stop();
+		log::add('sigri_atome', 'debug', 'Mise à jour du plugin sigri_atome');
+		sigri_atome::CronIsInstall();
 	}
 	
 	function sigri_atome_remove() {
@@ -54,6 +39,22 @@
 			log::add('sigri_atome', 'debug', 'Arrêt du cron launch_sigri_atome');
 			$cron->stop();
 			log::add('sigri_atome', 'debug', 'Suppression du cron launch_sigri_atome');
+			$cron->remove();
+		}
+
+		$cron = cron::byClassAndFunction('sigri_atome', 'cronHourly');
+		if (is_object($cron)) {
+			log::add('sigri_atome', 'debug', 'Arrêt du cron cronHourly');
+			$cron->stop();
+			log::add('sigri_atome', 'debug', 'Suppression du cron cronHourly');
+			$cron->remove();
+		}
+
+		$cron = cron::byClassAndFunction('sigri_atome', 'cronDaily');
+		if (is_object($cron)) {
+			log::add('sigri_atome', 'debug', 'Arrêt du cron cronDaily');
+			$cron->stop();
+			log::add('sigri_atome', 'debug', 'Suppression du cron cronDaily');
 			$cron->remove();
 		}
 

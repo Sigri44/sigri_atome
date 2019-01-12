@@ -103,6 +103,7 @@
 			// Enregistrement du cookie
 			log::add('sigri_atome', 'debug', 'Enregistrement du cookie');
 			curl_setopt($curl, CURLOPT_COOKIEJAR, $COOKIES_FILE);
+			log::add('sigri_atome', 'debug', '$COOKIES_FILE : '.$COOKIES_FILE);
 	
 			log::add('sigri_atome', 'debug', 'Récupération de la connexion API');
 			$response = curl_exec($curl);
@@ -110,6 +111,7 @@
 			// Enregistrement de la connexion au format JSON
 			log::add('sigri_atome', 'debug', 'Enregistrement de la connexion au format JSON');
 			file_put_contents($JSON_CONNECTION, $response);
+			log::add('sigri_atome', 'debug', '$JSON_CONNECTION : '.$JSON_CONNECTION);
 
 			// Récupération des erreurs curl
 			$err = curl_error($curl);
@@ -144,7 +146,9 @@
 			$JSON_CONNECTION = $RESSOURCES_DIR.'atome_connection.json';
 			
 			// Extraction des infos utilisateurs
+			log::add('sigri_atome', 'debug', '$response : '.$response);
 			$json_login = json_decode($response);
+			log::add('sigri_atome', 'debug', '$json_login : '.$json_login);
 			$user_id = $json_login->id;
 			$user_reference = $json_login->subscriptions[0]->reference;
 
@@ -152,8 +156,10 @@
 			log::add('sigri_atome', 'debug', 'Configuration de la période à récupérer');
 			if ($period != null) {
 				$URL_DATA = $URL_API . "/" . $user_id . "/" . $user_reference . $API_DATA . "?period=" . $period;
+				log::add('sigri_atome', 'debug', '$URL_DATA : '.$URL_DATA);
 			} else {
 				$URL_DATA = $URL_API . "/" . $user_id . "/" . $user_reference . $API_DATA;
+				log::add('sigri_atome', 'debug', '$URL_DATA : '.$URL_DATA);
 			}
 	
 			// ********************************************

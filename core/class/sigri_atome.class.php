@@ -50,7 +50,7 @@
 			log::add('sigri_atome', 'debug', '----------Lancement du cronHourly----------');
 			$eqLogics = eqLogic::byType('sigri_atome');
 			foreach ($eqLogics as $eqLogic) {
-				if ($sigri_atome->getIsEnable() == 1) {
+				if ($eqLogic->getIsEnable() == 1) {
 					if (!empty($sigri_atome->getConfiguration('identifiant')) && !empty($sigri_atome->getConfiguration('password'))) {
 						$json_connection = $sigri_atome->Call_Atome_Login();
 						$period = "day";
@@ -64,7 +64,7 @@
 			log::add('sigri_atome', 'debug', '----------Lancement du cronDaily----------');
 			$eqLogics = eqLogic::byType('sigri_atome');
 			foreach ($eqLogics as $eqLogic) {
-				if ($sigri_atome->getIsEnable() == 1) {
+				if ($eqLogic->getIsEnable() == 1) {
 					if (!empty($sigri_atome->getConfiguration('identifiant')) && !empty($sigri_atome->getConfiguration('password'))) {
 						$json_connection = $sigri_atome->Call_Atome_Login();
 						$period = "month";

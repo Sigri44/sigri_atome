@@ -75,6 +75,16 @@
 		}
 
 		public function Call_Atome_Login() {
+			// Debug complet de la fonction
+			log::add('sigri_atome', 'debug', '----------Call_Atome_Login----------');
+			log::add('sigri_atome', 'debug', '$URL_API : '.$URL_API);
+			log::add('sigri_atome', 'debug', '$URL_API : '.$API_LOGIN);
+			log::add('sigri_atome', 'debug', '$URL_API : '.$API_DATA);
+			log::add('sigri_atome', 'debug', '$URL_API : '.$URL_LOGIN);
+			log::add('sigri_atome', 'debug', '$URL_API : '.$RESSOURCES_DIR);
+			log::add('sigri_atome', 'debug', '$URL_API : '.$COOKIES_FILE);
+			log::add('sigri_atome', 'debug', '----------FinConfig----------');
+
 			// *******************************
 			// * Etape 1 - Connexion à l'API *
 			// *******************************
@@ -127,6 +137,16 @@
 		}
 		
 		public function Call_Atome_API($response, $period) {
+			// Debug complet de la fonction
+			log::add('sigri_atome', 'debug', '----------Call_Atome_API----------');
+			log::add('sigri_atome', 'debug', '$URL_API : '.$URL_API);
+			log::add('sigri_atome', 'debug', '$URL_API : '.$API_LOGIN);
+			log::add('sigri_atome', 'debug', '$URL_API : '.$API_DATA);
+			log::add('sigri_atome', 'debug', '$URL_API : '.$URL_LOGIN);
+			log::add('sigri_atome', 'debug', '$URL_API : '.$RESSOURCES_DIR);
+			log::add('sigri_atome', 'debug', '$URL_API : '.$COOKIES_FILE);
+			log::add('sigri_atome', 'debug', '----------FinConfig----------');
+			
 			// ************
 			// * Ephémère *
 			// ************

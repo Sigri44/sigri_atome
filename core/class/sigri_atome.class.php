@@ -18,16 +18,6 @@
 	/* * ***************************Includes********************************* */
 	require_once __DIR__ . '/../../../../core/php/core.inc.php';
 
-	// *****************
-	// * Configuration *
-	// *****************
-	const URL_API = "https://esoftlink.esoftthings.com";
-	const API_LOGIN = "/api/user/login.json";
-	const API_DATA = "/graph-query-last-consumption";
-	const URL_LOGIN = self::URL_API . self::API_LOGIN;
-	const RESSOURCES_DIR = __DIR__.'/ressources/';
-	const COOKIES_FILE = self::RESSOURCES_DIR.'cookies.txt';
-
 	/*
 	$URL_API = "https://esoftlink.esoftthings.com";
 	$API_LOGIN = "/api/user/login.json";
@@ -37,7 +27,17 @@
 	$COOKIES_FILE = $RESSOURCES_DIR.'cookies.txt';
 	*/
 
-	class sigri_atome extends eqLogic {		
+	class sigri_atome extends eqLogic {
+		// *****************
+		// * Configuration *
+		// *****************
+		const URL_API = "https://esoftlink.esoftthings.com";
+		const API_LOGIN = "/api/user/login.json";
+		const API_DATA = "/graph-query-last-consumption";
+		const URL_LOGIN = self::URL_API . self::API_LOGIN;
+		const RESSOURCES_DIR = __DIR__.'/ressources/';
+		const COOKIES_FILE = self::RESSOURCES_DIR.'cookies.txt';
+
 		public function preUpdate() {
 
 		}

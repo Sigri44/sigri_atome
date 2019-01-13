@@ -87,11 +87,11 @@
 			// Debug complet de la fonction
 			log::add('sigri_atome', 'debug', '----------Call_Atome_Login----------');
 			log::add('sigri_atome', 'debug', '$URL_API : '.self::URL_API);
-			log::add('sigri_atome', 'debug', '$URL_API : '.self::API_LOGIN);
-			log::add('sigri_atome', 'debug', '$URL_API : '.self::API_DATA);
-			log::add('sigri_atome', 'debug', '$URL_API : '.self::URL_LOGIN);
-			log::add('sigri_atome', 'debug', '$URL_API : '.self::RESSOURCES_DIR);
-			log::add('sigri_atome', 'debug', '$URL_API : '.self::COOKIES_FILE);
+			log::add('sigri_atome', 'debug', '$API_LOGIN : '.self::API_LOGIN);
+			log::add('sigri_atome', 'debug', '$API_DATA : '.self::API_DATA);
+			log::add('sigri_atome', 'debug', '$URL_LOGIN : '.self::URL_LOGIN);
+			log::add('sigri_atome', 'debug', '$RESSOURCES_DIR : '.self::RESSOURCES_DIR);
+			log::add('sigri_atome', 'debug', '$COOKIES_FILE : '.self::COOKIES_FILE);
 			log::add('sigri_atome', 'debug', '----------FinConfig----------');
 
 			// *******************************
@@ -149,11 +149,11 @@
 			// Debug complet de la fonction
 			log::add('sigri_atome', 'debug', '----------Call_Atome_API----------');
 			log::add('sigri_atome', 'debug', '$URL_API : '.self::URL_API);
-			log::add('sigri_atome', 'debug', '$URL_API : '.self::API_LOGIN);
-			log::add('sigri_atome', 'debug', '$URL_API : '.self::API_DATA);
-			log::add('sigri_atome', 'debug', '$URL_API : '.self::URL_LOGIN);
-			log::add('sigri_atome', 'debug', '$URL_API : '.self::RESSOURCES_DIR);
-			log::add('sigri_atome', 'debug', '$URL_API : '.self::COOKIES_FILE);
+			log::add('sigri_atome', 'debug', '$API_LOGIN : '.self::API_LOGIN);
+			log::add('sigri_atome', 'debug', '$API_DATA : '.self::API_DATA);
+			log::add('sigri_atome', 'debug', '$URL_LOGIN : '.self::URL_LOGIN);
+			log::add('sigri_atome', 'debug', '$RESSOURCES_DIR : '.self::RESSOURCES_DIR);
+			log::add('sigri_atome', 'debug', '$COOKIES_FILE : '.self::COOKIES_FILE);
 			log::add('sigri_atome', 'debug', '----------FinConfig----------');
 			
 			// ************

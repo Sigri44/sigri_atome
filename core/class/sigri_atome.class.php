@@ -36,6 +36,7 @@
 		const API_DATA = "/graph-query-last-consumption";
 		const URL_LOGIN = self::URL_API . self::API_LOGIN;
 		const RESSOURCES_DIR = __DIR__.'/../../ressources/';
+		const JSON_CONNECTION = RESSOURCES_DIR.'atome_connection.json';
 		const COOKIES_FILE = self::RESSOURCES_DIR.'cookies.txt';
 
 		public function preUpdate() {
@@ -171,8 +172,8 @@
 			$timestamp = date_timestamp_get(date_create($TODAY . $NOW)) + 3600;
     		$DAY_EXPORT = date("d_m_Y_H_i", $timestamp);
 			$JSON_EXPORT_FILENAME = "export_".$period."_".$DAY_EXPORT.".json";  // Nom du fichier JSON à utiliser lors d'un export "API"
-			$JSON_EXPORT_FILE = $RESSOURCES_DIR.$JSON_EXPORT_FILENAME;
-			$JSON_CONNECTION = $RESSOURCES_DIR.'atome_connection.json';
+			$JSON_EXPORT_FILE = self::RESSOURCES_DIR.$JSON_EXPORT_FILENAME;
+			
 			
 			// Extraction des infos utilisateurs
 			log::add('sigri_atome', 'debug', '$response : '.$response);

@@ -92,6 +92,7 @@
 
 		public function Call_Atome_Login($login, $password) {
 			// Debug complet de la fonction
+			log::add('sigri_atome', 'debug', '********** Etape 1 - Connexion à l\'API **********');
 			log::add('sigri_atome', 'debug', '----------Call_Atome_Login----------');
 			log::add('sigri_atome', 'debug', '$URL_API : '.self::URL_API);
 			log::add('sigri_atome', 'debug', '$API_LOGIN : '.self::API_LOGIN);
@@ -127,6 +128,8 @@
 					"Content-Type: application/json"
 				),
 			));
+
+			log::add('sigri_atome', 'debug', '$curl : '.$curl);
 	
 			// Enregistrement du cookie
 			log::add('sigri_atome', 'debug', 'Enregistrement du cookie');
@@ -134,7 +137,9 @@
 			log::add('sigri_atome', 'debug', '$COOKIES_FILE : '.self::COOKIES_FILE);
 	
 			log::add('sigri_atome', 'debug', 'Récupération de la connexion API');
+			log::add('sigri_atome', 'debug', '$curl : '.$curl);
 			$response = curl_exec($curl);
+			log::add('sigri_atome', 'debug', '$response : '.$response);
 	
 			// Enregistrement de la connexion au format JSON
 			log::add('sigri_atome', 'debug', 'Enregistrement de la connexion au format JSON');

@@ -100,6 +100,7 @@
 			log::add('sigri_atome', 'debug', '$URL_LOGIN : '.self::URL_LOGIN);
 			log::add('sigri_atome', 'debug', '$RESSOURCES_DIR : '.self::RESSOURCES_DIR);
 			log::add('sigri_atome', 'debug', '$COOKIES_FILE : '.self::COOKIES_FILE);
+			log::add('sigri_atome', 'debug', '$JSON_CONNECTION : '.self::JSON_CONNECTION);
 			log::add('sigri_atome', 'debug', '$login : '.$login);
 			log::add('sigri_atome', 'debug', '$password : '.$password);
 			log::add('sigri_atome', 'debug', '** 1.X - FinConfig **');
@@ -131,36 +132,32 @@
 					"Content-Type: application/json"
 				),
 			));
-
-			log::add('sigri_atome', 'debug', '$curl : '.$curl);
-			log::add('sigri_atome', 'debug', 'curl_errno : '.curl_errno($curl));
 	
-			// Enregistrement du cookie
-			log::add('sigri_atome', 'debug', '** 1.2 - Enregistrement du cookie **');
+			// Configuration du chemin du cookie
+			log::add('sigri_atome', 'debug', '** 1.2 - Configuration du chemin du cookie **');
 			curl_setopt($curl, CURLOPT_COOKIEJAR, self::COOKIES_FILE);
-			log::add('sigri_atome', 'debug', '$COOKIES_FILE : '.self::COOKIES_FILE);
 	
 			log::add('sigri_atome', 'debug', '** 1.3 - Récupération de la connexion API **');
-			log::add('sigri_atome', 'debug', '$curl : '.$curl);
-			log::add('sigri_atome', 'debug', 'curl_errno : '.curl_errno($curl));
-
 			$response = curl_exec($curl);
-			log::add('sigri_atome', 'debug', '$curl : '.$curl);
-			log::add('sigri_atome', 'debug', 'curl_errno : '.curl_errno($curl));
 			log::add('sigri_atome', 'debug', '$response : '.$response);
-			log::add('sigri_atome', 'debug', 'curl_errno : '.curl_errno($response));
 	
 			// Enregistrement de la connexion au format JSON
 			log::add('sigri_atome', 'debug', '** 1.4 - Enregistrement de la connexion au format JSON **');
 			file_put_contents(self::JSON_CONNECTION, $response);
-			log::add('sigri_atome', 'debug', '$JSON_CONNECTION : '.self::JSON_CONNECTION);
 
 			// Récupération des erreurs curl
 			$err = curl_error($curl);
+			$errno = curl_errno($curl);
 			curl_close($curl);
-	
+
+			log::add('sigri_atome', 'error', '[DEBUG] cURL Error n°'.$errno.' : ' . $err);
+
+			if (!self::COOKIES_FILE) {
+				log::add('sigri_atome', 'error', 'Aucun fichier cookies n\'as pu être enregistré !');
+			}
+
 			if ($err) {
-				log::add('sigri_atome', 'error', 'cURL Error #:' . $err);
+				log::add('sigri_atome', 'error', 'cURL Error n°'.$errno.' : ' . $err);
 			} else {
 				log::add('sigri_atome', 'debug', '** 1.5 - Connexion réussie, récupération des informations en cours ... **');
 			}

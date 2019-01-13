@@ -112,7 +112,10 @@
 			// Forcer cURL à utiliser un nouveau cookie de session
 			log::add('sigri_atome', 'debug', 'Configuration du cookie');
 			$curl = curl_init();
-			curl_setopt($curl, CURLOPT_COOKIESESSION, true); 
+			curl_setopt($curl, CURLOPT_COOKIESESSION, true);
+
+			// TEST - Désactiver les erreurs certificats avec curl
+			curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
 	
 			curl_setopt_array($curl, array(
 				CURLOPT_URL => self::URL_LOGIN,

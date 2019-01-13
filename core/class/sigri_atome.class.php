@@ -116,7 +116,7 @@
 			curl_setopt($curl, CURLOPT_COOKIESESSION, true);
 
 			// TEST - Désactiver les erreurs certificats avec curl
-			curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
+			//curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
 	
 			curl_setopt_array($curl, array(
 				CURLOPT_URL => self::URL_LOGIN,

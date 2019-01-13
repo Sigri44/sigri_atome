@@ -99,6 +99,8 @@
 			log::add('sigri_atome', 'debug', '$URL_LOGIN : '.self::URL_LOGIN);
 			log::add('sigri_atome', 'debug', '$RESSOURCES_DIR : '.self::RESSOURCES_DIR);
 			log::add('sigri_atome', 'debug', '$COOKIES_FILE : '.self::COOKIES_FILE);
+			log::add('sigri_atome', 'debug', '$login : '.$login);
+			log::add('sigri_atome', 'debug', '$password : '.$password);
 			log::add('sigri_atome', 'debug', '----------FinConfig----------');
 
 			// *******************************

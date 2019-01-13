@@ -145,7 +145,10 @@
 			log::add('sigri_atome', 'debug', 'curl_errno : '.curl_errno($curl));
 
 			$response = curl_exec($curl);
+			log::add('sigri_atome', 'debug', '$curl : '.$curl);
+			log::add('sigri_atome', 'debug', 'curl_errno : '.curl_errno($curl));
 			log::add('sigri_atome', 'debug', '$response : '.$response);
+			log::add('sigri_atome', 'debug', 'curl_errno : '.curl_errno($response));
 	
 			// Enregistrement de la connexion au format JSON
 			log::add('sigri_atome', 'debug', '** 1.4 - Enregistrement de la connexion au format JSON **');

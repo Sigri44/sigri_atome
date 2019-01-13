@@ -76,7 +76,7 @@
 			foreach ($eqLogics as $eqLogic) {
 				if ($eqLogic->getIsEnable() == 1) {
 					if (!empty($eqLogic->getConfiguration('identifiant')) && !empty($eqLogic->getConfiguration('password'))) {
-						$json_connection = $eqLogic->Call_Atome_Login();
+						$json_connection = $eqLogic->Call_Atome_Login($eqLogic->getConfiguration('identifiant'), $eqLogic->getConfiguration('password'));
 						$period = "month";
 						$eqLogic->Call_Atome_API($json_connection, $period);
 					}
@@ -84,7 +84,7 @@
 			}
 		}
 
-		public function Call_Atome_Login() {
+		public function Call_Atome_Login($login, $password) {
 			// Debug complet de la fonction
 			log::add('sigri_atome', 'debug', '----------Call_Atome_Login----------');
 			log::add('sigri_atome', 'debug', '$URL_API : '.self::URL_API);
@@ -113,7 +113,7 @@
 				CURLOPT_TIMEOUT => 30,
 				CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
 				CURLOPT_CUSTOMREQUEST => "POST",
-				CURLOPT_POSTFIELDS => "{\"email\": \"$this->getConfiguration('identifiant')\",\"plainPassword\": \"$this->getConfiguration('password')\"}",
+				CURLOPT_POSTFIELDS => "{\"email\": \"$login\",\"plainPassword\": \"$password\"}",
 				CURLOPT_HTTPHEADER => array(
 					"Cache-Control: no-cache",
 					"Content-Type: application/json"

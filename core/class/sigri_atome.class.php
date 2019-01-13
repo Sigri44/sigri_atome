@@ -133,6 +133,7 @@
 			));
 
 			log::add('sigri_atome', 'debug', '$curl : '.$curl);
+			log::add('sigri_atome', 'debug', 'curl_errno : '.curl_errno($curl));
 	
 			// Enregistrement du cookie
 			log::add('sigri_atome', 'debug', '** 1.2 - Enregistrement du cookie **');
@@ -141,6 +142,8 @@
 	
 			log::add('sigri_atome', 'debug', '** 1.3 - Récupération de la connexion API **');
 			log::add('sigri_atome', 'debug', '$curl : '.$curl);
+			log::add('sigri_atome', 'debug', 'curl_errno : '.curl_errno($curl));
+
 			$response = curl_exec($curl);
 			log::add('sigri_atome', 'debug', '$response : '.$response);
 	

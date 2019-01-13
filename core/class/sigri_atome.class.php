@@ -36,7 +36,7 @@
 		const API_DATA = "/graph-query-last-consumption";
 		const URL_LOGIN = self::URL_API . self::API_LOGIN;
 		const RESSOURCES_DIR = __DIR__.'/../../ressources/';
-		const JSON_CONNECTION = RESSOURCES_DIR.'atome_connection.json';
+		const JSON_CONNECTION = self::RESSOURCES_DIR.'atome_connection.json';
 		const COOKIES_FILE = self::RESSOURCES_DIR.'cookies.txt';
 
 		public function preUpdate() {

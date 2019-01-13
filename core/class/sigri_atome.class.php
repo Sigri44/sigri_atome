@@ -57,7 +57,7 @@
 		}
 
 		public static function cronHourly() {
-			log::add('sigri_atome', 'debug', '----------Lancement du cronHourly----------');
+			log::add('sigri_atome', 'debug', '********** Etape 0 - Lancement du cronHourly **********');
 			$eqLogics = eqLogic::byType('sigri_atome');
 			foreach ($eqLogics as $eqLogic) {
 				if ($eqLogic->getIsEnable() == 1) {
@@ -74,7 +74,7 @@
 		}
 
 		public static function cronDaily() {
-			log::add('sigri_atome', 'debug', '----------Lancement du cronDaily----------');
+			log::add('sigri_atome', 'debug', '********** Etape 0 - Lancement du cronDaily **********');
 			$eqLogics = eqLogic::byType('sigri_atome');
 			foreach ($eqLogics as $eqLogic) {
 				if ($eqLogic->getIsEnable() == 1) {
@@ -92,8 +92,8 @@
 
 		public function Call_Atome_Login($login, $password) {
 			// Debug complet de la fonction
-			log::add('sigri_atome', 'debug', '********** Etape 1 - Connexion à l\'API **********');
-			log::add('sigri_atome', 'debug', '----------Call_Atome_Login----------');
+			log::add('sigri_atome', 'debug', '********** Etape 1 - Authentification à l\'API **********');
+			log::add('sigri_atome', 'debug', '********** -- Call_Atome_Login -- **********');
 			log::add('sigri_atome', 'debug', '$URL_API : '.self::URL_API);
 			log::add('sigri_atome', 'debug', '$API_LOGIN : '.self::API_LOGIN);
 			log::add('sigri_atome', 'debug', '$API_DATA : '.self::API_DATA);
@@ -102,15 +102,15 @@
 			log::add('sigri_atome', 'debug', '$COOKIES_FILE : '.self::COOKIES_FILE);
 			log::add('sigri_atome', 'debug', '$login : '.$login);
 			log::add('sigri_atome', 'debug', '$password : '.$password);
-			log::add('sigri_atome', 'debug', '----------FinConfig----------');
+			log::add('sigri_atome', 'debug', '** 1.X - FinConfig **');
 
 			// *******************************
 			// * Etape 1 - Connexion à l'API *
 			// *******************************
-			log::add('sigri_atome', 'debug', 'Authentification sur Atome');
+			log::add('sigri_atome', 'debug', '** 1.0 - Authentification sur Atome **');
 
 			// Forcer cURL à utiliser un nouveau cookie de session
-			log::add('sigri_atome', 'debug', 'Configuration du cookie');
+			log::add('sigri_atome', 'debug', '** 1.1 - Configuration du cookie **');
 			$curl = curl_init();
 			curl_setopt($curl, CURLOPT_COOKIESESSION, true);
 
@@ -135,17 +135,17 @@
 			log::add('sigri_atome', 'debug', '$curl : '.$curl);
 	
 			// Enregistrement du cookie
-			log::add('sigri_atome', 'debug', 'Enregistrement du cookie');
+			log::add('sigri_atome', 'debug', '** 1.2 - Enregistrement du cookie **');
 			curl_setopt($curl, CURLOPT_COOKIEJAR, self::COOKIES_FILE);
 			log::add('sigri_atome', 'debug', '$COOKIES_FILE : '.self::COOKIES_FILE);
 	
-			log::add('sigri_atome', 'debug', 'Récupération de la connexion API');
+			log::add('sigri_atome', 'debug', '** 1.3 - Récupération de la connexion API **');
 			log::add('sigri_atome', 'debug', '$curl : '.$curl);
 			$response = curl_exec($curl);
 			log::add('sigri_atome', 'debug', '$response : '.$response);
 	
 			// Enregistrement de la connexion au format JSON
-			log::add('sigri_atome', 'debug', 'Enregistrement de la connexion au format JSON');
+			log::add('sigri_atome', 'debug', '** 1.4 - Enregistrement de la connexion au format JSON **');
 			file_put_contents(self::JSON_CONNECTION, $response);
 			log::add('sigri_atome', 'debug', '$JSON_CONNECTION : '.self::JSON_CONNECTION);
 
@@ -156,7 +156,7 @@
 			if ($err) {
 				log::add('sigri_atome', 'error', 'cURL Error #:' . $err);
 			} else {
-				log::add('sigri_atome', 'debug', 'Connexion réussie, récupération des informations en cours ...');
+				log::add('sigri_atome', 'debug', '** 1.5 - Connexion réussie, récupération des informations en cours ... **');
 			}
 
 			return $response;
@@ -164,14 +164,15 @@
 		
 		public function Call_Atome_API($response, $period) {
 			// Debug complet de la fonction
-			log::add('sigri_atome', 'debug', '----------Call_Atome_API----------');
+			log::add('sigri_atome', 'debug', '********** Etape 2 - Récupération des datas énergie **********');
+			log::add('sigri_atome', 'debug', '********** -- Call_Atome_API -- **********');
 			log::add('sigri_atome', 'debug', '$URL_API : '.self::URL_API);
 			log::add('sigri_atome', 'debug', '$API_LOGIN : '.self::API_LOGIN);
 			log::add('sigri_atome', 'debug', '$API_DATA : '.self::API_DATA);
 			log::add('sigri_atome', 'debug', '$URL_LOGIN : '.self::URL_LOGIN);
 			log::add('sigri_atome', 'debug', '$RESSOURCES_DIR : '.self::RESSOURCES_DIR);
 			log::add('sigri_atome', 'debug', '$COOKIES_FILE : '.self::COOKIES_FILE);
-			log::add('sigri_atome', 'debug', '----------FinConfig----------');
+			log::add('sigri_atome', 'debug', '** 2.X - FinConfig **');
 			
 			// ************
 			// * Ephémère *
@@ -199,7 +200,7 @@
 			$user_reference = $json_login->subscriptions[0]->reference;
 
 			// Configuration de la période à récupérer
-			log::add('sigri_atome', 'debug', 'Configuration de la période à récupérer');
+			log::add('sigri_atome', 'debug', '** 2.1 - Configuration de la période à récupérer **');
 			if ($period != null) {
 				$URL_DATA = $URL_API . "/" . $user_id . "/" . $user_reference . $API_DATA . "?period=" . $period;
 				log::add('sigri_atome', 'debug', '$URL_DATA : '.$URL_DATA);
@@ -211,7 +212,7 @@
 			// ********************************************
 			// * Etape 2 - Récupération des datas énergie *
 			// ********************************************
-			log::add('sigri_atome', 'debug', 'Récupération des datas énergie en cours ...');
+			log::add('sigri_atome', 'debug', '** 2.2 - Récupération des datas énergie en cours ... **');
 			$curl = curl_init();
 	
 			curl_setopt_array($curl, array(
@@ -244,10 +245,10 @@
 			} else {
 				// Enregistrement des datas énergie
 				if ($STORAGE == "JSON") {
-					log::add('sigri_atome', 'debug', 'Enregistrement des datas énergie au format JSON');
+					log::add('sigri_atome', 'debug', '** 2.3a - Enregistrement des datas énergie au format JSON **');
 					file_put_contents($JSON_EXPORT_FILE, $response);
 				} elseif ($STORAGE == "BDD") {
-					log::add('sigri_atome', 'debug', 'Enregistrement des datas énergie en BDD');
+					log::add('sigri_atome', 'debug', '** 2.3b - Enregistrement des datas énergie en BDD **');
 					if ($period == "day") {
 						for ($i = 0; $i<25; $i++) {
 							// Extraction des data énergie
@@ -290,7 +291,7 @@
 						}
 					}
 				} else {
-					log::add('sigri_atome', 'error', 'Aucun mode d\'enregistrement n\'as été choisi !');
+					log::add('sigri_atome', 'error', '** 2.3 - Aucun mode d\'enregistrement n\'as été choisi ! **');
 				}
 			}
 		}

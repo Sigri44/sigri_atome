@@ -42,19 +42,19 @@
 			$cron->remove();
 		}
 
-		$cron = cron::byClassAndFunction('sigri_atome', 'cronHourly');
+		$cron = cron::byClassAndFunction('sigri_atome', 'cronHoraire');
 		if (is_object($cron)) {
-			log::add('sigri_atome', 'debug', 'Arrêt du cron cronHourly');
+			log::add('sigri_atome', 'debug', 'Arrêt du cron cronHoraire');
 			$cron->stop();
-			log::add('sigri_atome', 'debug', 'Suppression du cron cronHourly');
+			log::add('sigri_atome', 'debug', 'Suppression du cron cronHoraire');
 			$cron->remove();
 		}
 
-		$cron = cron::byClassAndFunction('sigri_atome', 'cronDaily');
+		$cron = cron::byClassAndFunction('sigri_atome', 'cronJournalier');
 		if (is_object($cron)) {
-			log::add('sigri_atome', 'debug', 'Arrêt du cron cronDaily');
+			log::add('sigri_atome', 'debug', 'Arrêt du cron cronJournalier');
 			$cron->stop();
-			log::add('sigri_atome', 'debug', 'Suppression du cron cronDaily');
+			log::add('sigri_atome', 'debug', 'Suppression du cron cronJournalier');
 			$cron->remove();
 		}
 

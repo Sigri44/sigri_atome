@@ -56,8 +56,8 @@
 			
 		}
 
-		public static function cronHourly() {
-			log::add('sigri_atome', 'debug', '********** Etape 0 - Lancement du cronHourly **********');
+		public static function cronHoraire() {
+			log::add('sigri_atome', 'debug', '********** Etape 0 - Lancement du cronHoraire **********');
 			$eqLogics = eqLogic::byType('sigri_atome');
 			foreach ($eqLogics as $eqLogic) {
 				if ($eqLogic->getIsEnable() == 1) {
@@ -73,8 +73,8 @@
 			}
 		}
 
-		public static function cronDaily() {
-			log::add('sigri_atome', 'debug', '********** Etape 0 - Lancement du cronDaily **********');
+		public static function cronJournalier() {
+			log::add('sigri_atome', 'debug', '********** Etape 0 - Lancement du cronJournalier **********');
 			$eqLogics = eqLogic::byType('sigri_atome');
 			foreach ($eqLogics as $eqLogic) {
 				if ($eqLogic->getIsEnable() == 1) {
@@ -318,32 +318,32 @@
 			}
 			*/
 
-			$cron = cron::byClassAndFunction('sigri_atome', 'cronHourly');
+			$cron = cron::byClassAndFunction('sigri_atome', 'cronHoraire');
 			if (!is_object($cron)) {
-				log::add('sigri_atome', 'debug', 'Cron cronHourly inexistant, il faut le créer');
+				log::add('sigri_atome', 'debug', 'Cron cronHoraire inexistant, il faut le créer');
 				$cron = new cron();
 				$cron->setClass('sigri_atome');
-				$cron->setFunction('cronHourly');
+				$cron->setFunction('cronHoraire');
 				$cron->setEnable(1);
 				$cron->setDeamon(0);
 				$cron->setSchedule("0 * * * *");
 				$cron->save();
 			} else {
-				log::add('sigri_atome', 'debug', 'Cron cronHourly existe déjà');
+				log::add('sigri_atome', 'debug', 'Cron cronHoraire existe déjà');
 			}
 
-			$cron = cron::byClassAndFunction('sigri_atome', 'cronDaily');
+			$cron = cron::byClassAndFunction('sigri_atome', 'cronJournalier');
 			if (!is_object($cron)) {
-				log::add('sigri_atome', 'debug', 'Cron cronDaily inexistant, il faut le créer');
+				log::add('sigri_atome', 'debug', 'Cron cronJournalier inexistant, il faut le créer');
 				$cron = new cron();
 				$cron->setClass('sigri_atome');
-				$cron->setFunction('cronDaily');
+				$cron->setFunction('cronJournalier');
 				$cron->setEnable(1);
 				$cron->setDeamon(0);
 				$cron->setSchedule("0 0 * * *");
 				$cron->save();
 			} else {
-				log::add('sigri_atome', 'debug', 'Cron cronDaily existe déjà');
+				log::add('sigri_atome', 'debug', 'Cron cronJournalier existe déjà');
 			}
 		}
 	}

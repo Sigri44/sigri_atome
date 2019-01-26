@@ -345,6 +345,7 @@
 
 		public function Save_Atome_Jeedom($period, $response, $start_date) {
 			$obj = json_decode($response, true);
+			log::add('sigri_atome', 'debug', $obj);
 			log::add('sigri_atome', 'debug', var_dump($obj));
 
 			if ($period == "day") {

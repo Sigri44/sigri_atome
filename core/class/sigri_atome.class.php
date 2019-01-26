@@ -116,15 +116,16 @@
 			$fb = "";
 			$response = false;
 			
-			/*
+			
 			try {
 				$curl = curl_init();
-				curl_setopt($curl, CURLOPT_COOKIESESSION, true);
 
 				// TEST - Désactiver les erreurs certificats avec curl
 				//curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
 		
 				curl_setopt_array($curl, array(
+					CURLOPT_COOKIESESSION => true,
+					CURLOPT_COOKIEFILE => self::COOKIES_FILE,
 					CURLOPT_URL => self::URL_LOGIN,
 					CURLOPT_RETURNTRANSFER => true,
 					CURLOPT_ENCODING => "",
@@ -132,7 +133,7 @@
 					CURLOPT_TIMEOUT => 30,
 					CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
 					CURLOPT_CUSTOMREQUEST => "POST",
-					CURLOPT_POSTFIELDS => "{\"email\": \"$login\",\"plainPassword\": \"$password\"}",
+					CURLOPT_POSTFIELDS => "{\"email\": \"".$login."\",\"plainPassword\": \"".$password."\"}",
 					CURLOPT_HTTPHEADER => array(
 						"Cache-Control: no-cache",
 						"Content-Type: application/json"
@@ -140,8 +141,14 @@
 				));
 		
 				// Configuration du chemin du cookie
+				/*
 				log::add('sigri_atome', 'debug', '** 1.2 - Configuration du chemin du cookie **');
+				// COOKIEJAR -> Reading CookieFile
 				curl_setopt($curl, CURLOPT_COOKIEJAR, self::COOKIES_FILE);
+				// COOKIEFILE -> Writing CookieFile
+				curl_setopt($curl, CURLOPT_COOKIEFILE, self::COOKIES_FILE);
+
+				*/
 		
 				log::add('sigri_atome', 'debug', '** 1.3 - Récupération de la connexion API **');
 				log::add('sigri_atome', 'debug', '$curl envoyé : '.$curl);
@@ -160,7 +167,7 @@
 				throw new Exception("Invalid URL",0,$e);
 				log::add('sigri_atome', 'debug', 'Throw : ' . $e);
 			}
-			*/
+			
 
 			/*
 
@@ -183,6 +190,7 @@
 			$response = $client->getResponse();
 
 			*/
+			/*
 
 			$request = new HttpRequest();
 			$request->setUrl('https://esoftlink.esoftthings.com/api/user/login.json');
@@ -204,11 +212,12 @@
 			}
 
 			die();
+			*/
 
 			if ($err) {
 				log::add('sigri_atome', 'error', 'cURL Error #:' . $err);
 			} else {
-				log::add('sigri_atome', 'debug', '$response : ' . $response->getBody());
+				log::add('sigri_atome', 'debug', '$response : ' . $response);
 			}
 
 			die();

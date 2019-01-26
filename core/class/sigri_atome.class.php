@@ -197,7 +197,7 @@
 			log::add('sigri_atome', 'debug', 'script plante pas la');
 			$json_login = json_decode($response);
 			log::add('sigri_atome', 'debug', 'script plante la');
-			log::add('sigri_atome', 'debug', '$json_login : '.$json_login);
+			//log::add('sigri_atome', 'debug', '$json_login : '.$json_login);
 			$user_id = $json_login->id;
 			$user_reference = $json_login->subscriptions[0]->reference;
 

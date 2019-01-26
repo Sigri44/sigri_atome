@@ -162,8 +162,9 @@
 				log::add('sigri_atome', 'debug', '** 1.5 - Connexion réussie, récupération des informations en cours ... **');
 			}
 			
-			if ($json_debug->errors[0] == "Login Failed") {
-				// Debug temporaire pour parser le tableau d'erreur
+			// Debug temporaire pour parser le tableau d'erreur
+			$json_debug = json_decode($response);
+			if ($json_debug->errors[0] == "Login Failed") {	
 				log::add('sigri_atome', 'error', '[ERROR] au niveau de la connexion : ' . $json_debug->errors[0]);
 				// Kill de la connexion si erreur au login
 				die();

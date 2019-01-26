@@ -116,6 +116,7 @@
 			$fb = "";
 			$response = false;
 			
+			/*
 			try {
 				$curl = curl_init();
 				curl_setopt($curl, CURLOPT_COOKIESESSION, true);
@@ -159,6 +160,37 @@
 				throw new Exception("Invalid URL",0,$e);
 				log::add('sigri_atome', 'debug', 'Throw : ' . $e);
 			}
+			*/
+
+			$curl = curl_init();
+
+			curl_setopt_array($curl, array(
+				CURLOPT_URL => "https://esoftlink.esoftthings.com/api/user/login.json",
+				CURLOPT_RETURNTRANSFER => true,
+				CURLOPT_ENCODING => "",
+				CURLOPT_MAXREDIRS => 10,
+				CURLOPT_TIMEOUT => 30,
+				CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+				CURLOPT_CUSTOMREQUEST => "POST",
+				CURLOPT_POSTFIELDS => "{\"email\": \"$login\",\"plainPassword\": \"$password\"}",
+				CURLOPT_HTTPHEADER => array(
+					"Content-Type: application/json",
+					"cache-control: no-cache"
+				),
+			));
+
+			$response = curl_exec($curl);
+			$err = curl_error($curl);
+
+			curl_close($curl);
+
+			if ($err) {
+				log::add('sigri_atome', 'error', 'cURL Error #:' . $err);
+			} else {
+				log::add('sigri_atome', 'debug', '$response : ' . $response);
+			}
+
+			die();
 
 			log::add('sigri_atome', 'debug', '$fb2 : ' . $fb);
 			if ($fb == "true" || $fb == "false") {

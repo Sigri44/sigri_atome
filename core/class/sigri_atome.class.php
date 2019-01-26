@@ -340,7 +340,7 @@
 				}
 			}
 			// Enregistrement des values dans Jeedom
-			$this->Save_Atome_Jeedom($period, $response, $start_date);
+			//$this->Save_Atome_Jeedom($period, $response, $start_date);
 		}
 
 		public function Save_Atome_Jeedom($period, $response, $start_datetime) {

@@ -66,12 +66,8 @@
 						log::add('sigri_atome', 'debug', 'Login : '.$eqLogic->getConfiguration('identifiant'));
 						log::add('sigri_atome', 'debug', 'Password : '.$eqLogic->getConfiguration('password'));
 						$json_connection = $eqLogic->Call_Atome_Login($eqLogic->getConfiguration('identifiant'), $eqLogic->getConfiguration('password'));
-						if ($err) {
-							die();
-						} else {
-							$period = "day";
-							$eqLogic->Call_Atome_API($json_connection, $period);
-						}
+						$period = "day";
+						$eqLogic->Call_Atome_API($json_connection, $period);
 					}
 				}
 			}
@@ -87,12 +83,8 @@
 						log::add('sigri_atome', 'debug', 'Login : '.$eqLogic->getConfiguration('identifiant'));
 						log::add('sigri_atome', 'debug', 'Password : '.$eqLogic->getConfiguration('password'));
 						$json_connection = $eqLogic->Call_Atome_Login($eqLogic->getConfiguration('identifiant'), $eqLogic->getConfiguration('password'));
-						if ($err) {
-							die();
-						} else {
-							$period = "month";
-							$eqLogic->Call_Atome_API($json_connection, $period);
-						}
+						$period = "month";
+						$eqLogic->Call_Atome_API($json_connection, $period);
 					}
 				}
 			}
@@ -166,13 +158,21 @@
 
 			if ($err) {
 				log::add('sigri_atome', 'error', 'cURL Error n°'.$errno.' : ' . $err);
-				// Kill de la connexion si erreur au login
-				die();
 			} else {
 				log::add('sigri_atome', 'debug', '** 1.5 - Connexion réussie, récupération des informations en cours ... **');
 			}
 
-			return $response;
+			// Debug temporaire pour parser le tableau d'erreur
+			$json_debug = json_decode($response);
+			log::add('sigri_atome', 'debug', '[TEST] $response->errors' . $json_debug->errors[0]);
+			die();
+
+			if ($response->errors == "Login Failed") {
+				// Kill de la connexion si erreur au login
+				die();
+			} else {
+				return $response;
+			}
 		}
 		
 		public function Call_Atome_API($response, $period) {

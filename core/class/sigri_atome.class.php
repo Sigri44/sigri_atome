@@ -115,9 +115,6 @@
 
 			$fb = "";
 			$response = false;
-
-			$session = $_SERVER['HTTP_COOKIE'];
-			log::add('sigri_atome', 'debug', '$_SERVER[\'HTTP_COOKIE\'] : ' . $session);
 			
 			try {
 				$curl = curl_init();
@@ -126,26 +123,24 @@
 				//curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
 		
 				curl_setopt_array($curl, array(
-					CURLOPT_COOKIESESSION => true,
 					CURLOPT_COOKIEFILE => self::COOKIES_FILE,
 					CURLOPT_COOKIEJAR => self::COOKIES_FILE,
-					CURLOPT_URL => self::URL_LOGIN,
-					CURLOPT_RETURNTRANSFER => true,
-					CURLOPT_ENCODING => "",
-					CURLOPT_MAXREDIRS => 10,
-					CURLOPT_TIMEOUT => 30,
-					CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+					CURLOPT_COOKIESESSION => true,
 					CURLOPT_CUSTOMREQUEST => "POST",
-					CURLOPT_POSTFIELDS => "{\"email\": \"".$login."\",\"plainPassword\": \"".$password."\"}",
+					CURLOPT_ENCODING => "",
+					CURLOPT_HEADER => true,
 					CURLOPT_HTTPHEADER => array(
 						"Cache-Control: no-cache",
 						"Content-Type: application/json"
 					),
+					CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+					CURLOPT_MAXREDIRS => 10,
+					CURLOPT_POSTFIELDS => "{\"email\": \"".$login."\",\"plainPassword\": \"".$password."\"}",
+					CURLOPT_RETURNTRANSFER => true,
+					CURLOPT_TIMEOUT => 30,
+					CURLOPT_URL => self::URL_LOGIN,
 				));
 
-				$session = $_SERVER['HTTP_COOKIE'];
-				log::add('sigri_atome', 'debug', '$_SERVER[\'HTTP_COOKIE\'] : ' . $session);
-		
 				// Configuration du chemin du cookie
 				/*
 				log::add('sigri_atome', 'debug', '** 1.2 - Configuration du chemin du cookie **');
@@ -161,9 +156,6 @@
 				$fb = curl_exec($curl);
 				log::add('sigri_atome', 'debug', '$fb1 : '.$fb);
 
-				$session = $_SERVER['HTTP_COOKIE'];
-				log::add('sigri_atome', 'debug', '$_SERVER[\'HTTP_COOKIE\'] : ' . $session);
-		
 				// Enregistrement de la connexion au format JSON
 				log::add('sigri_atome', 'debug', '** 1.4 - Enregistrement de la connexion au format JSON **');
 				file_put_contents(self::JSON_CONNECTION, $fb);
@@ -172,9 +164,6 @@
 				$err = curl_error($curl);
 				$errno = curl_errno($curl);
 				curl_close($curl);
-
-				$session = $_SERVER['HTTP_COOKIE'];
-				log::add('sigri_atome', 'debug', '$_SERVER[\'HTTP_COOKIE\'] : ' . $session);
 			} catch (Exception $e) {
 				throw new Exception("Invalid URL",0,$e);
 				log::add('sigri_atome', 'debug', 'Throw : ' . $e);

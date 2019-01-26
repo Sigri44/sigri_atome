@@ -343,7 +343,7 @@
 			$this->Save_Atome_Jeedom($period, $response, $start_date);
 		}
 
-		public function Save_Atome_Jeedom($period, $response, $start_date) {
+		public function Save_Atome_Jeedom($period, $response, $start_datetime) {
 			$obj = json_decode($response, true);
 			log::add('sigri_atome', 'debug', $obj);
 			log::add('sigri_atome', 'debug', var_dump($obj));
@@ -352,11 +352,14 @@
 				log::add('sigri_atome', 'debug', 'Traitement des données horaires');
 				$cmd = $this->getCmd(null, 'consoheure');
 				$delta = "1 hour";
+				$start_date = $start_datetime;
 				$date_format = "Y-m-d H:00:00";
 			} elseif ($period == "month") {
 				log::add('sigri_atome', 'debug', 'Traitement des données journalières');
 				$cmd = $this->getCmd(null, 'consojour');
 				$delta = "1 day";
+				$start_date = $obj['data']['time'];
+				$start_date = date_create_from_format('Y-m-d', $start_date);
 				$date_format = "Y-m-d";
 			}
 

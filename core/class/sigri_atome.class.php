@@ -112,44 +112,62 @@
 
 			// Forcer cURL à utiliser un nouveau cookie de session
 			log::add('sigri_atome', 'debug', '** 1.1 - Configuration du cookie **');
-			$curl = curl_init();
-			curl_setopt($curl, CURLOPT_COOKIESESSION, true);
 
-			// TEST - Désactiver les erreurs certificats avec curl
-			//curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
-	
-			curl_setopt_array($curl, array(
-				CURLOPT_URL => self::URL_LOGIN,
-				CURLOPT_RETURNTRANSFER => true,
-				CURLOPT_ENCODING => "",
-				CURLOPT_MAXREDIRS => 10,
-				CURLOPT_TIMEOUT => 30,
-				CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-				CURLOPT_CUSTOMREQUEST => "POST",
-				CURLOPT_POSTFIELDS => "{\"email\": \"$login\",\"plainPassword\": \"$password\"}",
-				CURLOPT_HTTPHEADER => array(
-					"Cache-Control: no-cache",
-					"Content-Type: application/json"
-				),
-			));
-	
-			// Configuration du chemin du cookie
-			log::add('sigri_atome', 'debug', '** 1.2 - Configuration du chemin du cookie **');
-			curl_setopt($curl, CURLOPT_COOKIEJAR, self::COOKIES_FILE);
-	
-			log::add('sigri_atome', 'debug', '** 1.3 - Récupération de la connexion API **');
-			log::add('sigri_atome', 'debug', '$curl envoyé : '.$curl);
-			$response = curl_exec($curl);
-			log::add('sigri_atome', 'debug', '$response : '.$response);
-	
-			// Enregistrement de la connexion au format JSON
-			log::add('sigri_atome', 'debug', '** 1.4 - Enregistrement de la connexion au format JSON **');
-			file_put_contents(self::JSON_CONNECTION, $response);
+			$fb = "";
+			$response = false;
+			
+			try {
+				$curl = curl_init();
+				curl_setopt($curl, CURLOPT_COOKIESESSION, true);
 
-			// Récupération des erreurs curl
-			$err = curl_error($curl);
-			$errno = curl_errno($curl);
-			curl_close($curl);
+				// TEST - Désactiver les erreurs certificats avec curl
+				//curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
+		
+				curl_setopt_array($curl, array(
+					CURLOPT_URL => self::URL_LOGIN,
+					CURLOPT_RETURNTRANSFER => true,
+					CURLOPT_ENCODING => "",
+					CURLOPT_MAXREDIRS => 10,
+					CURLOPT_TIMEOUT => 30,
+					CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+					CURLOPT_CUSTOMREQUEST => "POST",
+					CURLOPT_POSTFIELDS => "{\"email\": \"$login\",\"plainPassword\": \"$password\"}",
+					CURLOPT_HTTPHEADER => array(
+						"Cache-Control: no-cache",
+						"Content-Type: application/json"
+					),
+				));
+		
+				// Configuration du chemin du cookie
+				log::add('sigri_atome', 'debug', '** 1.2 - Configuration du chemin du cookie **');
+				curl_setopt($curl, CURLOPT_COOKIEJAR, self::COOKIES_FILE);
+		
+				log::add('sigri_atome', 'debug', '** 1.3 - Récupération de la connexion API **');
+				log::add('sigri_atome', 'debug', '$curl envoyé : '.$curl);
+				$fb = curl_exec($curl);
+				log::add('sigri_atome', 'debug', '$fb : '.$fb);
+		
+				// Enregistrement de la connexion au format JSON
+				log::add('sigri_atome', 'debug', '** 1.4 - Enregistrement de la connexion au format JSON **');
+				file_put_contents(self::JSON_CONNECTION, $fb);
+
+				// Récupération des erreurs curl
+				$err = curl_error($curl);
+				$errno = curl_errno($curl);
+				curl_close($curl);
+			} catch (Exception $e) {
+				throw new Exception("Invalid URL",0,$e);
+				log::add('sigri_atome', 'debug', 'Throw : ' . $e);
+			}
+
+			log::add('sigri_atome', 'debug', '$fb : ' . $fb);
+			if ($fb == "true" || $fb == "false") {
+				log::add('sigri_atome', 'debug', '$fb : ' . $fb);
+				$response = $fb;
+			}
+			log::add('sigri_atome', 'debug', '$response : ' . $response);
+			
+			die();
 
 			log::add('sigri_atome', 'error', 'Erreur cURL rencontré n°'.$errno.' : ' . $err);
 

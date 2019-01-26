@@ -339,6 +339,7 @@
 					log::add('sigri_atome', 'error', '** 2.3 - Aucun mode d\'enregistrement n\'as été choisi ! **');
 				}
 			}
+			log::add('sigri_atome', 'debug', '********** Etape 3 - Fin du Cron, tout s\'est bien déroulé ! **********');
 			// Enregistrement des values dans Jeedom
 			//$this->Save_Atome_Jeedom($period, $response, $start_date);
 		}

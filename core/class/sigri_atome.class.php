@@ -158,6 +158,8 @@
 
 			if ($err) {
 				log::add('sigri_atome', 'error', 'cURL Error n°'.$errno.' : ' . $err);
+				// Kill de la connexion si erreur au login
+				die();
 			} else {
 				log::add('sigri_atome', 'debug', '** 1.5 - Connexion réussie, récupération des informations en cours ... **');
 			}

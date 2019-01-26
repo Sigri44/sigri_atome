@@ -115,8 +115,9 @@
 
 			$fb = "";
 			$response = false;
-			
-			log::add('sigri_atome', 'debug', '$_SERVER[\'HTTP_COOKIE\'] : ' . $_SERVER['HTTP_COOKIE']);
+
+			$session = $_SERVER['HTTP_COOKIE'];
+			log::add('sigri_atome', 'debug', '$_SERVER[\'HTTP_COOKIE\'] : ' . $session);
 			
 			try {
 				$curl = curl_init();
@@ -127,6 +128,7 @@
 				curl_setopt_array($curl, array(
 					CURLOPT_COOKIESESSION => true,
 					CURLOPT_COOKIEFILE => self::COOKIES_FILE,
+					CURLOPT_COOKIEJAR => self::COOKIES_FILE,
 					CURLOPT_URL => self::URL_LOGIN,
 					CURLOPT_RETURNTRANSFER => true,
 					CURLOPT_ENCODING => "",
@@ -140,6 +142,9 @@
 						"Content-Type: application/json"
 					),
 				));
+
+				$session = $_SERVER['HTTP_COOKIE'];
+				log::add('sigri_atome', 'debug', '$_SERVER[\'HTTP_COOKIE\'] : ' . $session);
 		
 				// Configuration du chemin du cookie
 				/*
@@ -155,6 +160,9 @@
 				log::add('sigri_atome', 'debug', '$curl envoyé : '.$curl);
 				$fb = curl_exec($curl);
 				log::add('sigri_atome', 'debug', '$fb1 : '.$fb);
+
+				$session = $_SERVER['HTTP_COOKIE'];
+				log::add('sigri_atome', 'debug', '$_SERVER[\'HTTP_COOKIE\'] : ' . $session);
 		
 				// Enregistrement de la connexion au format JSON
 				log::add('sigri_atome', 'debug', '** 1.4 - Enregistrement de la connexion au format JSON **');
@@ -164,6 +172,9 @@
 				$err = curl_error($curl);
 				$errno = curl_errno($curl);
 				curl_close($curl);
+
+				$session = $_SERVER['HTTP_COOKIE'];
+				log::add('sigri_atome', 'debug', '$_SERVER[\'HTTP_COOKIE\'] : ' . $session);
 			} catch (Exception $e) {
 				throw new Exception("Invalid URL",0,$e);
 				log::add('sigri_atome', 'debug', 'Throw : ' . $e);

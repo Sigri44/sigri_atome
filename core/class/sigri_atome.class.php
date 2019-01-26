@@ -93,6 +93,7 @@
 		public function Call_Atome_Login($login, $password) {
 			// Debug complet de la fonction
 			log::add('sigri_atome', 'debug', '********** Etape 1 - Authentification à l\'API **********');
+			/*
 			log::add('sigri_atome', 'debug', '********** -- Call_Atome_Login -- **********');
 			log::add('sigri_atome', 'debug', '$URL_API : '.self::URL_API);
 			log::add('sigri_atome', 'debug', '$API_LOGIN : '.self::API_LOGIN);
@@ -104,6 +105,7 @@
 			log::add('sigri_atome', 'debug', '$login : '.$login);
 			log::add('sigri_atome', 'debug', '$password : '.$password);
 			log::add('sigri_atome', 'debug', '** 1.X - FinConfig **');
+			*/
 
 			// *******************************
 			// * Etape 1 - Connexion à l'API *
@@ -159,6 +161,7 @@
 		public function Call_Atome_API($response, $period) {
 			// Debug complet de la fonction
 			log::add('sigri_atome', 'debug', '********** Etape 2 - Récupération des datas énergie **********');
+			/*
 			log::add('sigri_atome', 'debug', '********** -- Call_Atome_API -- **********');
 			log::add('sigri_atome', 'debug', '$URL_API : '.self::URL_API);
 			log::add('sigri_atome', 'debug', '$API_LOGIN : '.self::API_LOGIN);
@@ -167,6 +170,7 @@
 			log::add('sigri_atome', 'debug', '$RESSOURCES_DIR : '.self::RESSOURCES_DIR);
 			log::add('sigri_atome', 'debug', '$COOKIES_FILE : '.self::COOKIES_FILE);
 			log::add('sigri_atome', 'debug', '** 2.X - FinConfig **');
+			*/
 			
 			// ************
 			// * Ephémère *

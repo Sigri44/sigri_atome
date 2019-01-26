@@ -178,7 +178,7 @@
 			// * Ephémère *
 			// ************
 			// Configuration Serveur
-			$STORAGE = "JSON"; // JSON ou BDD
+			$STORAGE = "BDD"; // JSON ou BDD
 			//$period = "day"; // null, day, week ou month
 
 			// Configuration date

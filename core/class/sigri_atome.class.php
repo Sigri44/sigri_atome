@@ -262,11 +262,12 @@
 							// Enregistrement de l'heure dans la BDD
 							log::add('sigri_atome', 'debug', 'Enregistrement dans la BDD en cours de l\'heure : '.$i);
 							$sql = 'INSERT INTO sigri_atome_hour (hour, total_consumption, index_hp, index_hc, cost_hp, cost_hc) VALUES (\''.$datetime.'\', \''.$totalConsumption.'\', \''.$indexHP.'\', \''.$indexHC.'\', \''.$costHP.'\', \''.$costHC.'\') ON DUPLICATE KEY UPDATE total_consumption='.$totalConsumption.', index_hp='.$indexHP.', index_hc='.$indexHC.', cost_hp='.$costHP.', cost_hc='.$costHC.'';
-							log::add('sigri_atome', 'debug', 'RQT $sql : ' . $sql);
 							$result = DB::Prepare($sql, array(), DB::FETCH_TYPE_ALL);
-							log::add('sigri_atome', 'debug', '$result : ' . $result);
+							log::add('sigri_atome', 'debug', 'RQT $sql : ' . $sql);
+							/*
 							$nbenreg = count($result);
 							log::add('sigri_atome', 'debug', 'Nombre d\'enregistrement "heure" effectués avec succès : '.$nbenreg);
+							*/
 						}
 					} elseif ($period == "month") {
 						for ($i = 0; $i<31; $i++) {
@@ -279,12 +280,15 @@
 							$costHP = $json_data->data[$i]->consumption->bill2;
 							$costHC = $json_data->data[$i]->consumption->bill1;
 
-							// Enregistrement de l'heure dans la BDD
+							// Enregistrement du jour dans la BDD
 							log::add('sigri_atome', 'debug', 'Enregistrement dans la BDD en cours du jour : '.$i);
-							$sql = 'INSERT INTO sigri_atome_day (day, total_consumption, index_hp, index_hc, cost_hp, cost_hc) VALUES (\''.$date.'\', \''.$totalConsumption.'\', \''.$indexHP.'\', \''.$indexHC.'\', \''.$costHP.'\', \''.$costHC.'\')ON DUPLICATE KEY UPDATE total_consumption='.$totalConsumption.', index_hp='.$indexHP.', index_hc='.$indexHC.', cost_hp='.$costHP.', cost_hc='.$costHC.'';
+							$sql = 'INSERT INTO sigri_atome_day (day, total_consumption, index_hp, index_hc, cost_hp, cost_hc) VALUES (\''.$date.'\', \''.$totalConsumption.'\', \''.$indexHP.'\', \''.$indexHC.'\', \''.$costHP.'\', \''.$costHC.'\') ON DUPLICATE KEY UPDATE total_consumption='.$totalConsumption.', index_hp='.$indexHP.', index_hc='.$indexHC.', cost_hp='.$costHP.', cost_hc='.$costHC.'';
 							$result = DB::Prepare($sql, array(), DB::FETCH_TYPE_ALL);
+							log::add('sigri_atome', 'debug', 'RQT $sql : ' . $sql);
+							/*
 							$nbenreg = count($result);
 							log::add('sigri_atome', 'debug', 'Nombre d\'enregistrement "jour" effectués avec succès : '.$nbenreg);
+							*/
 						}
 					}
 				} else {

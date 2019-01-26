@@ -66,8 +66,12 @@
 						log::add('sigri_atome', 'debug', 'Login : '.$eqLogic->getConfiguration('identifiant'));
 						log::add('sigri_atome', 'debug', 'Password : '.$eqLogic->getConfiguration('password'));
 						$json_connection = $eqLogic->Call_Atome_Login($eqLogic->getConfiguration('identifiant'), $eqLogic->getConfiguration('password'));
-						$period = "day";
-						$eqLogic->Call_Atome_API($json_connection, $period);
+						if ($err) {
+							die();
+						} else {
+							$period = "day";
+							$eqLogic->Call_Atome_API($json_connection, $period);
+						}
 					}
 				}
 			}
@@ -83,8 +87,12 @@
 						log::add('sigri_atome', 'debug', 'Login : '.$eqLogic->getConfiguration('identifiant'));
 						log::add('sigri_atome', 'debug', 'Password : '.$eqLogic->getConfiguration('password'));
 						$json_connection = $eqLogic->Call_Atome_Login($eqLogic->getConfiguration('identifiant'), $eqLogic->getConfiguration('password'));
-						$period = "month";
-						$eqLogic->Call_Atome_API($json_connection, $period);
+						if ($err) {
+							die();
+						} else {
+							$period = "month";
+							$eqLogic->Call_Atome_API($json_connection, $period);
+						}
 					}
 				}
 			}

@@ -162,6 +162,8 @@
 			}
 			*/
 
+			/*
+
 			$client = new http\Client;
 			$request = new http\Client\Request;
 
@@ -179,6 +181,29 @@
 
 			$client->enqueue($request)->send();
 			$response = $client->getResponse();
+
+			*/
+
+			$request = new HttpRequest();
+			$request->setUrl('https://esoftlink.esoftthings.com/api/user/login.json');
+			$request->setMethod(HTTP_METH_POST);
+
+			$request->setHeaders(array(
+				'cache-control' => 'no-cache',
+				'Content-Type' => 'application/json'
+			));
+
+			$request->setBody('{"email": "'.$login.'","plainPassword": "'.$password.'"}');
+
+			try {
+				$response = $request->send();
+
+				log::add('sigri_atome', 'debug', '$response : ' . $response->getBody());
+			} catch (HttpException $ex) {
+				log::add('sigri_atome', 'error', 'Erreur HttpException : ' . $ex);
+			}
+
+			die();
 
 			if ($err) {
 				log::add('sigri_atome', 'error', 'cURL Error #:' . $err);

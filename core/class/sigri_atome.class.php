@@ -138,6 +138,7 @@
 			curl_setopt($curl, CURLOPT_COOKIEJAR, self::COOKIES_FILE);
 	
 			log::add('sigri_atome', 'debug', '** 1.3 - Récupération de la connexion API **');
+			log::add('sigri_atome', 'debug', '$curl envoyé : '.$curl);
 			$response = curl_exec($curl);
 			log::add('sigri_atome', 'debug', '$response : '.$response);
 	
@@ -150,7 +151,7 @@
 			$errno = curl_errno($curl);
 			curl_close($curl);
 
-			log::add('sigri_atome', 'error', '[DEBUG] cURL Error n°'.$errno.' : ' . $err);
+			log::add('sigri_atome', 'error', 'Erreur cURL rencontré n°'.$errno.' : ' . $err);
 
 			if (!self::COOKIES_FILE) {
 				log::add('sigri_atome', 'error', 'Aucun fichier cookies n\'as pu être enregistré !');
@@ -165,7 +166,7 @@
 			// Debug temporaire pour parser le tableau d'erreur
 			$json_debug = json_decode($response);
 			if ($json_debug->errors[0] == "Login Failed") {	
-				log::add('sigri_atome', 'error', '[ERROR] au niveau de la connexion : ' . $json_debug->errors[0]);
+				log::add('sigri_atome', 'error', 'Erreur au niveau de la connexion API : ' . $json_debug->errors[0]);
 				// Kill de la connexion si erreur au login
 				die();
 			} else {

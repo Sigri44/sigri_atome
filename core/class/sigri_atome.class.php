@@ -79,9 +79,11 @@
 			foreach ($eqLogics as $eqLogic) {
 				if ($eqLogic->getIsEnable() == 1) {
 					if (!empty($eqLogic->getConfiguration('identifiant')) && !empty($eqLogic->getConfiguration('password'))) {
+						/*
 						log::add('sigri_atome', 'debug', 'Debug avant login');
 						log::add('sigri_atome', 'debug', 'Login : '.$eqLogic->getConfiguration('identifiant'));
 						log::add('sigri_atome', 'debug', 'Password : '.$eqLogic->getConfiguration('password'));
+						*/
 						$json_connection = $eqLogic->Call_Atome_Login($eqLogic->getConfiguration('identifiant'), $eqLogic->getConfiguration('password'));
 						$period = "month";
 						$eqLogic->Call_Atome_API($json_connection, $period);
@@ -135,7 +137,7 @@
 			$response = curl_exec($curl);
 
 			// Enregistrement de la connexion au format JSON
-			log::add('sigri_atome', 'debug', '** 1.4 - Enregistrement de la connexion au format JSON **');
+			log::add('sigri_atome', 'debug', '** 1.1 - Enregistrement de la connexion au format JSON **');
 			file_put_contents(self::JSON_CONNECTION, $response);
 
 			// Récupération des erreurs curl
@@ -148,7 +150,7 @@
 				log::add('sigri_atome', 'error', 'cURL Error #:' . $err);
 			} else {
 				log::add('sigri_atome', 'debug', '$response : ' . $response);
-				log::add('sigri_atome', 'debug', '** 1.5 - Connexion réussie, récupération des informations en cours ... **');
+				log::add('sigri_atome', 'debug', '** 1.2 - Connexion réussie, récupération des informations en cours ... **');
 			}
 
 			if (!self::COOKIES_FILE) {
@@ -192,7 +194,9 @@
 			
 			// Extraction des infos utilisateurs
 			log::add('sigri_atome', 'debug', '$response : '.$response);
+			log::add('sigri_atome', 'debug', 'script plante pas la');
 			$json_login = json_decode($response);
+			log::add('sigri_atome', 'debug', 'script plante la');
 			log::add('sigri_atome', 'debug', '$json_login : '.$json_login);
 			$user_id = $json_login->id;
 			$user_reference = $json_login->subscriptions[0]->reference;

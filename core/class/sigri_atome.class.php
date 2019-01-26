@@ -162,32 +162,28 @@
 			}
 			*/
 
-			$curl = curl_init();
+			$client = new http\Client;
+			$request = new http\Client\Request;
 
-			curl_setopt_array($curl, array(
-				CURLOPT_URL => "https://esoftlink.esoftthings.com/api/user/login.json",
-				CURLOPT_RETURNTRANSFER => true,
-				CURLOPT_ENCODING => "",
-				CURLOPT_MAXREDIRS => 10,
-				CURLOPT_TIMEOUT => 30,
-				CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-				CURLOPT_CUSTOMREQUEST => "POST",
-				CURLOPT_POSTFIELDS => "{\"email\": \"".$login."\",\"plainPassword\": \"".$password."\"}",
-				CURLOPT_HTTPHEADER => array(
-					"Content-Type: application/json",
-					"cache-control: no-cache"
-				),
+			$body = new http\Message\Body;
+			$body->append('{"email": "'.$login.'","plainPassword": "'.$password.'"}');
+
+			$request->setRequestUrl('https://esoftlink.esoftthings.com/api/user/login.json');
+			$request->setRequestMethod('POST');
+			$request->setBody($body);
+
+			$request->setHeaders(array(
+				'cache-control' => 'no-cache',
+				'Content-Type' => 'application/json'
 			));
 
-			$response = curl_exec($curl);
-			$err = curl_error($curl);
-
-			curl_close($curl);
+			$client->enqueue($request)->send();
+			$response = $client->getResponse();
 
 			if ($err) {
 				log::add('sigri_atome', 'error', 'cURL Error #:' . $err);
 			} else {
-				log::add('sigri_atome', 'debug', '$response : ' . $response);
+				log::add('sigri_atome', 'debug', '$response : ' . $response->getBody());
 			}
 
 			die();

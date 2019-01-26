@@ -360,13 +360,13 @@
 				$date_format = "Y-m-d";
 			}
 
-			foreach ($obj['graphe']['data'] as &$value) {
+			foreach ($obj['data'] as &$value) {
 				$jeedom_event_date = $start_date->format($date_format);
-				if ($value['valeur'] == "-1" OR $value['valeur'] == "-2") {
-					log::add('sigri_atome', 'debug', 'Date : ' . $jeedom_event_date . ' : Valeur incorrecte : ' . $value['valeur']);
+				if ($value['totalConsumption'] == "-1" OR $value['totalConsumption'] == "-2") {
+					log::add('sigri_atome', 'debug', 'Date : ' . $jeedom_event_date . ' : Valeur incorrecte : ' . $value['totalConsumption']);
 				} else {
-					log::add('sigri_atome', 'debug', 'Date : ' . $jeedom_event_date . ' : Indice : ' . $value['valeur'] . ' KWh');
-					$cmd->event($value['valeur'], $jeedom_event_date);
+					log::add('sigri_atome', 'debug', 'Date : ' . $jeedom_event_date . ' : Indice : ' . $value['totalConsumption'] . ' KWh');
+					$cmd->event($value['totalConsumption'], $jeedom_event_date);
 				}
 				date_add($start_date,date_interval_create_from_date_string($delta));
 			}

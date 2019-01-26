@@ -128,7 +128,6 @@
 					CURLOPT_COOKIESESSION => true,
 					CURLOPT_CUSTOMREQUEST => "POST",
 					CURLOPT_ENCODING => "",
-					CURLOPT_HEADER => true,
 					CURLOPT_HTTPHEADER => array(
 						"Cache-Control: no-cache",
 						"Content-Type: application/json"

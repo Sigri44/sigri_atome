@@ -193,21 +193,17 @@
 			
 			
 			// Extraction des infos utilisateurs
-			log::add('sigri_atome', 'debug', '$response : '.$response);
-			log::add('sigri_atome', 'debug', 'script plante pas la');
 			$json_login = json_decode($response);
-			log::add('sigri_atome', 'debug', 'script plante la');
-			//log::add('sigri_atome', 'debug', '$json_login : '.$json_login);
 			$user_id = $json_login->id;
 			$user_reference = $json_login->subscriptions[0]->reference;
 
 			// Configuration de la période à récupérer
 			log::add('sigri_atome', 'debug', '** 2.1 - Configuration de la période à récupérer **');
 			if ($period != null) {
-				$URL_DATA = $URL_API . "/" . $user_id . "/" . $user_reference . $API_DATA . "?period=" . $period;
+				$URL_DATA = self::URL_API . "/" . $user_id . "/" . $user_reference . self::API_DATA . "?period=" . $period;
 				log::add('sigri_atome', 'debug', '$URL_DATA : '.$URL_DATA);
 			} else {
-				$URL_DATA = $URL_API . "/" . $user_id . "/" . $user_reference . $API_DATA;
+				$URL_DATA = self::URL_API . "/" . $user_id . "/" . $user_reference . self::API_DATA;
 				log::add('sigri_atome', 'debug', '$URL_DATA : '.$URL_DATA);
 			}
 	
@@ -218,24 +214,21 @@
 			$curl = curl_init();
 	
 			curl_setopt_array($curl, array(
-				CURLOPT_URL => $URL_DATA,
-				CURLOPT_RETURNTRANSFER => true,
-				CURLOPT_ENCODING => "",
-				CURLOPT_MAXREDIRS => 10,
-				CURLOPT_TIMEOUT => 30,
-				CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+				CURLOPT_COOKIEFILE => self::COOKIES_FILE,
+				CURLOPT_COOKIEJAR => self::COOKIES_FILE,
+				CURLOPT_COOKIESESSION => true,
 				CURLOPT_CUSTOMREQUEST => "GET",
+				CURLOPT_ENCODING => "",
 				CURLOPT_HTTPHEADER => array(
 					"Cache-Control: no-cache",
 					"Content-Type: application/json",
 				),
+				CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+				CURLOPT_MAXREDIRS => 10,
+				CURLOPT_RETURNTRANSFER => true,
+				CURLOPT_TIMEOUT => 30,
+				CURLOPT_URL => $URL_DATA,
 			));
-	
-			// Récupération du cookie
-			curl_setopt($curl, CURLOPT_COOKIESESSION, true);
-	
-			// Fichier dans lequel cURL va lire les cookies
-			curl_setopt($curl, CURLOPT_COOKIEFILE, $COOKIES_FILE);
 	
 			$response = curl_exec($curl);
 			$err = curl_error($curl);

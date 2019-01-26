@@ -116,6 +116,7 @@
 			$fb = "";
 			$response = false;
 			
+			log::add('sigri_atome', 'debug', '$_SERVER[\'HTTP_COOKIE\'] : ' . $_SERVER['HTTP_COOKIE']);
 			
 			try {
 				$curl = curl_init();

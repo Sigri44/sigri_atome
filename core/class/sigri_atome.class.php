@@ -115,7 +115,7 @@
 
 			$fb = "";
 			$response = false;
-
+			
 			try {
 				$curl = curl_init();
 
@@ -138,8 +138,10 @@
 					CURLOPT_POSTFIELDS => "{\"email\": \"".$login."\",\"plainPassword\": \"".$password."\"}",
 					CURLOPT_RETURNTRANSFER => true,
 					CURLOPT_TIMEOUT => 30,
-					CURLOPT_URL => urlencode(self::URL_LOGIN),
+					CURLOPT_URL => self::URL_LOGIN,
 				));
+
+				log::add('sigri_atome', 'debug', 'URL_LOGIN : --' . self::URL_LOGIN . "--");
 
 				// Configuration du chemin du cookie
 				/*

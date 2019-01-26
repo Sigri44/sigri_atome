@@ -145,7 +145,7 @@
 				log::add('sigri_atome', 'debug', '** 1.3 - Récupération de la connexion API **');
 				log::add('sigri_atome', 'debug', '$curl envoyé : '.$curl);
 				$fb = curl_exec($curl);
-				log::add('sigri_atome', 'debug', '$fb : '.$fb);
+				log::add('sigri_atome', 'debug', '$fb1 : '.$fb);
 		
 				// Enregistrement de la connexion au format JSON
 				log::add('sigri_atome', 'debug', '** 1.4 - Enregistrement de la connexion au format JSON **');
@@ -160,9 +160,9 @@
 				log::add('sigri_atome', 'debug', 'Throw : ' . $e);
 			}
 
-			log::add('sigri_atome', 'debug', '$fb : ' . $fb);
+			log::add('sigri_atome', 'debug', '$fb2 : ' . $fb);
 			if ($fb == "true" || $fb == "false") {
-				log::add('sigri_atome', 'debug', '$fb : ' . $fb);
+				log::add('sigri_atome', 'debug', '$fb3 : ' . $fb);
 				$response = $fb;
 			}
 			log::add('sigri_atome', 'debug', '$response : ' . $response);

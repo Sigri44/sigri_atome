@@ -46,6 +46,37 @@
 		public function postUpdate() {
 			log::add('sigri_atome', 'debug', 'Mise à jour de l\'équipement');
 			self::CronIsInstall();
+
+			if ($this->getIsEnable()) {
+				$cmd = $this->getCmd(null,'consoheure');
+				if (!is_object($cmd)) {
+					$cmd = new sigri_atomeCmd();
+					$cmd->setName('Consommation Horaire');
+					$cmd->setEqLogic_id($this->getId());
+					$cmd->setLogicalId('consoheure');
+					$cmd->setUnite('kW');
+					$cmd->setType('info');
+					$cmd->setSubType('numeric');
+					$cmd->setIsHistorized(1);
+					$cmd->setEventOnly(1);
+					$cmd->save();
+				}
+			}
+			if ($this->getIsEnable()) {
+				$cmd = $this->getCmd(null,'consojour');
+				if (!is_object($cmd)) {
+					$cmd = new sigri_atomeCmd();
+					$cmd->setName('Consommation Journalière');
+					$cmd->setEqLogic_id($this->getId());
+					$cmd->setLogicalId('consojour');
+					$cmd->setUnite('kWh');
+					$cmd->setType('info');
+					$cmd->setSubType('numeric');
+					$cmd->setIsHistorized(1);
+					$cmd->setEventOnly(1);
+					$cmd->save();
+				}
+			}
 		}
 		
 		public function preRemove() {
@@ -184,6 +215,19 @@
 			// Configuration date
 			$TODAY = date("Y-m-d");
 			$NOW = date("Hi");
+			$start_date = date("Y-m-d H:i:s");
+
+			/*
+			if ($period == "day") {
+				$end_datetime = $TODAY - 24H;
+			} elseif ($period == "month") {
+				$end_datetime = $TODAY - 31J;
+			} else {
+				log::add('sigri_atome', 'error', 'Datetime : Aucun mode d\'enregistrement n\'as été choisi !');
+			}
+			$start_date = $TODAY->format('d/m/Y');
+			$end_date = $end_datetime->format('d/m/Y');
+			*/
 
 			// Configuration JSON
 			$timestamp = date_timestamp_get(date_create($TODAY . $NOW)) + 3600;
@@ -294,6 +338,36 @@
 				} else {
 					log::add('sigri_atome', 'error', '** 2.3 - Aucun mode d\'enregistrement n\'as été choisi ! **');
 				}
+			}
+			// Enregistrement des values dans Jeedom
+			$this->Save_Atome_Jeedom($period, $response, $start_date);
+		}
+
+		public function Save_Atome_Jeedom($period, $response, $start_date) {
+			$obj = json_decode($response, true);
+			log::add('sigri_atome', 'debug', var_dump($obj));
+
+			if ($period == "day") {
+				log::add('sigri_atome', 'debug', 'Traitement des données horaires');
+				$cmd = $this->getCmd(null, 'consoheure');
+				$delta = "1 hour";
+				$date_format = "Y-m-d H:00:00";
+			} elseif ($period == "month") {
+				log::add('sigri_atome', 'debug', 'Traitement des données journalières');
+				$cmd = $this->getCmd(null, 'consojour');
+				$delta = "1 day";
+				$date_format = "Y-m-d";
+			}
+
+			foreach ($obj['graphe']['data'] as &$value) {
+				$jeedom_event_date = $start_date->format($date_format);
+				if ($value['valeur'] == "-1" OR $value['valeur'] == "-2") {
+					log::add('sigri_atome', 'debug', 'Date : ' . $jeedom_event_date . ' : Valeur incorrecte : ' . $value['valeur']);
+				} else {
+					log::add('sigri_atome', 'debug', 'Date : ' . $jeedom_event_date . ' : Indice : ' . $value['valeur'] . ' KWh');
+					$cmd->event($value['valeur'], $jeedom_event_date);
+				}
+				date_add($start_date,date_interval_create_from_date_string($delta));
 			}
 		}
 

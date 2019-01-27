@@ -537,9 +537,12 @@
 
 				$datetime = date("2019-01-27 19:19:19");
 				log::add('sigri_atome', 'debug', '$datetime1 : ' . $datetime);
-				$datetime = date("H:i:s", $datetime);
+				$timestamp = date_timestamp_get($datetime);
+				//log::add('sigri_atome', 'debug', '$datetime2 : ' . $timestamp);
+				log::add('sigri_atome', 'debug', '$datetime3 : ' . $datetime);
+				$datetime = date("H:i:s", $timestamp);
 				//$datetime = $datetime->format(date('H:i:s'));
-				log::add('sigri_atome', 'debug', '$datetime2 : ' . $datetime);
+				log::add('sigri_atome', 'debug', '$datetime4 : ' . $datetime);
 				$dataCmd->event($datetime);
 				$dataCmd->save();
 			}

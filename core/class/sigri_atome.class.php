@@ -353,8 +353,8 @@
 							// Historisation de la valeur dans Jeedom
 							$cmd = $this->getCmd(null, 'consojour');
 							$totalConsumption = $totalConsumption / 1000;
-							log::add('sigri_atome', 'debug', 'Date : : ' . $datetime . ' : Indice : ' . $totalConsumption . ' kWh');
-							$cmd->event($totalConsumption, $datetime);
+							log::add('sigri_atome', 'debug', 'Date : : ' . $date . ' : Indice : ' . $totalConsumption . ' kWh');
+							$cmd->event($totalConsumption, $date);
 						}
 					}
 				} else {

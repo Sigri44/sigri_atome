@@ -201,23 +201,9 @@
 		public function Call_Atome_API($response, $period) {
 			// Debug complet de la fonction
 			log::add('sigri_atome', 'debug', '********** Etape 2 - Récupération des datas énergie **********');
-			/*
-			log::add('sigri_atome', 'debug', '********** -- Call_Atome_API -- **********');
-			log::add('sigri_atome', 'debug', '$URL_API : '.self::URL_API);
-			log::add('sigri_atome', 'debug', '$API_LOGIN : '.self::API_LOGIN);
-			log::add('sigri_atome', 'debug', '$API_DATA : '.self::API_DATA);
-			log::add('sigri_atome', 'debug', '$URL_LOGIN : '.self::URL_LOGIN);
-			log::add('sigri_atome', 'debug', '$RESSOURCES_DIR : '.self::RESSOURCES_DIR);
-			log::add('sigri_atome', 'debug', '$COOKIES_FILE : '.self::COOKIES_FILE);
-			log::add('sigri_atome', 'debug', '** 2.X - FinConfig **');
-			*/
-			
-			// ************
-			// * Ephémère *
-			// ************
-			// Configuration Serveur
+
+			// Configuration
 			$STORAGE = "BDD"; // JSON ou BDD
-			//$period = "day"; // null, day, week ou month
 
 			// Configuration date
 			$TODAY = date("Y-m-d");
@@ -365,6 +351,7 @@
 							
 							// Historisation de la valeur dans Jeedom
 							$cmd = $this->getCmd(null, 'consojour');
+							$totalConsumption = $totalConsumption / 1000;
 							log::add('sigri_atome', 'debug', 'Date : : ' . $datetime . ' : Indice : ' . $totalConsumption . ' kWh');
 							$cmd->event($totalConsumption, $datetime);
 						}

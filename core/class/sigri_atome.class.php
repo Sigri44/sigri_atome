@@ -547,7 +547,8 @@
 				$datetime = date("H:i:s", $timestamp);
 				//$datetime = $datetime->format(date('H:i:s'));
 				log::add('sigri_atome', 'debug', '$datetime4 : ' . $datetime);
-				$dataCmd->event($datetime);
+				$dataCmd->addHistoryValue("19.29", $datetime);
+				//$dataCmd->event($datetime);
 				$dataCmd->save();
 			}
 		}

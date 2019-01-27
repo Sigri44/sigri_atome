@@ -529,7 +529,7 @@
 				// On lui ajoute un événement avec pour information 'Données de test'
 				$dataCmd->event(date('H:i:s'));
 				// Ajout d'une valeur en historique
-				$dataCmd->addHistoryValue("19.19", "19:19:19");
+				//$dataCmd->addHistoryValue("19.19", "19:19:19");
 				$dataCmd->addHistoryValue("19.29", date('H:i:s'));
 				// On sauvegarde cet événement
 				$dataCmd->save();

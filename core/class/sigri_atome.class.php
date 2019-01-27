@@ -334,9 +334,8 @@
 							// Test ajout fonction addHistoryValue
 							//$cmd = cmd::byName('consoheure');
 							//$eqLogic->checkAndUpdateCmd('consojour', $totalConsumption);
-							//log::add('sigri_atome', 'debug', '$this : ' . $this);
-							log::add('sigri_atome', 'debug', '$this : ' . var_dump($this));
 							$cmd = $this->getCmd(null, 'consojour');
+							$cmd = cmd::getCmd(null, 'consojour');
 							log::add('sigri_atome', 'debug', '$totalConsumption : ' . $totalConsumption);
 							log::add('sigri_atome', 'debug', '$datetime : ' . $datetime);
 							$cmd->addHistoryValue($totalConsumption, $datetime);

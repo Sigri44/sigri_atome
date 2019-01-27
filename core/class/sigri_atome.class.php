@@ -82,6 +82,7 @@
 			log::add('sigri_atome', 'debug', '********** Etape 0 - Lancement du cronHoraire **********');
 			$eqLogics = eqLogic::byType('sigri_atome');
 			foreach ($eqLogics as $eqLogic) {
+				log::add('sigri_atome', 'debug', '$eqLogic : ' . $eqLogic);
 				if ($eqLogic->getIsEnable() == 1) {
 					if (!empty($eqLogic->getConfiguration('identifiant')) && !empty($eqLogic->getConfiguration('password'))) {
 						log::add('sigri_atome', 'debug', 'Debug avant login');

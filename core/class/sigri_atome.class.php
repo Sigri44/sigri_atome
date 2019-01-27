@@ -371,6 +371,14 @@
 							$result = DB::Prepare($sql, array(), DB::FETCH_TYPE_ALL);
 							log::add('sigri_atome', 'debug', 'RQT $sql : ' . $sql);
 
+							// Historisation de la valeur dans Jeedom
+							//$obj = $json_data;
+							$cmd = $this->getCmd(null, 'consoheure');
+							//$delta = "1 hour";
+							//$start_date = $datetime //(déjà formatté)
+							//$value = $totalConsumption; // OK
+							log::add('sigri_atome', 'debug', 'Date : : ' . $datetime . ' : Indice : ' . $totalConsumption . ' kWh');
+							$cmd->event($totalConsumption, $datetime);
 
 							/*
 							// Test ajout fonction addHistoryValue

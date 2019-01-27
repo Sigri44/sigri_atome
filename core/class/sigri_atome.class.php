@@ -57,11 +57,6 @@
 				$cmd->setIsVisible(1);
 				// Sauvegarde de la commande
 				$cmd->save();
-				/*
-				$cmd->setUnite('kW');
-				$cmd->setIsHistorized(1);
-				$cmd->setEventOnly(1);
-				*/
 			}
 			$getDataCmd = $this->getCmd(null, 'refresh');
 			if (!is_object($getDataCmd)) {
@@ -526,7 +521,7 @@
 			// Test pour ne répondre qu'à la commande rafraichir
 			if ($this->getLogicalId() == 'refresh') {
 				// On récupère l'équipement à partir de l'identifiant fournit par la commande
-				$sigriObj = sigri_atome::byId($this->getLogicalId());
+				$sigriObj = sigri_atome::byId($this->getEqlogic_id());
 				// On récupère la commande 'data' appartenant à l'équipement
 				$dataCmd = $sigriObj->getCmd('info', 'data');
 				// On lui ajoute un événement avec pour information 'Données de test'

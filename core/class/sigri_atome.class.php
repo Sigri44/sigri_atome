@@ -516,9 +516,11 @@
 
 	class sigri_atomeCmd extends cmd {
 		public function execute($_options = array()) {
+			/*
 			log::add('sigri_atome', 'debug', 'Exécution d\'une commande');
 			log::add('sigri_atome', 'debug', '$this->getEqlogic_id() : ' . $this->getEqlogic_id());
 			log::add('sigri_atome', 'debug', '$this->getName() : ' . $this->getName());
+			*/
 
 			// Test pour ne répondre qu'à la commande rafraichir
 			if ($this->getLogicalId() == 'refresh') {
@@ -527,11 +529,17 @@
 				// On récupère la commande 'data' appartenant à l'équipement
 				$dataCmd = $sigriObj->getCmd('info', 'data');
 				// On lui ajoute un événement avec pour information 'Données de test'
-				$dataCmd->event(date('H:i:s'));
+				//$dataCmd->event(date('H:i:s'));
 				// Ajout d'une valeur en historique
 				//$dataCmd->addHistoryValue("19.19", "19:19:19");
-				$dataCmd->addHistoryValue("19.29", date('H:i:s'));
+				//$dataCmd->addHistoryValue("19.29", date('H:i:s'));
 				// On sauvegarde cet événement
+
+				$datetime = date("2019-01-27 19:19:19");
+				log::add('sigri_atome', 'debug', '$datetime1 : ' . $datetime);
+				$datetime = $datetime->format(date('H:i:s'));
+				log::add('sigri_atome', 'debug', '$datetime2 : ' . $datetime);
+				$dataCmd->event($datetime);
 				$dataCmd->save();
 			}
 		}

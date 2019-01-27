@@ -18,15 +18,6 @@
 	/* * ***************************Includes********************************* */
 	require_once __DIR__ . '/../../../../core/php/core.inc.php';
 
-	/*
-	$URL_API = "https://esoftlink.esoftthings.com";
-	$API_LOGIN = "/api/user/login.json";
-	$API_DATA = "/graph-query-last-consumption";
-	$URL_LOGIN = $URL_API . $API_LOGIN;
-	$RESSOURCES_DIR = __DIR__.'/ressources/';
-	$COOKIES_FILE = $RESSOURCES_DIR.'cookies.txt';
-	*/
-
 	class sigri_atome extends eqLogic {
 		// *****************
 		// * Configuration *
@@ -51,7 +42,7 @@
 				$cmd = $this->getCmd(null,'consoheure');
 				if (!is_object($cmd)) {
 					$cmd = new sigri_atomeCmd();
-					$cmd->setName('Consommation Horaire');
+					$cmd->setName('Conso Horaire');
 					$cmd->setEqLogic_id($this->getId());
 					$cmd->setLogicalId('consoheure');
 					$cmd->setUnite('kW');
@@ -66,7 +57,7 @@
 				$cmd = $this->getCmd(null,'consojour');
 				if (!is_object($cmd)) {
 					$cmd = new sigri_atomeCmd();
-					$cmd->setName('Consommation Journalière');
+					$cmd->setName('Conso Journalière');
 					$cmd->setEqLogic_id($this->getId());
 					$cmd->setLogicalId('consojour');
 					$cmd->setUnite('kWh');

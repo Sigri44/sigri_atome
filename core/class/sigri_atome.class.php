@@ -528,6 +528,8 @@
 				$dataCmd = $sigriObj->getCmd('info', 'data');
 				// On lui ajoute un événement avec pour information 'Données de test'
 				$dataCmd->event(date('H:i:s'));
+				// Ajout d'une valeur en historique
+				$dataCmd->addHistoryValue($totalConsumption, "19:19:19");
 				// On sauvegarde cet événement
 				$dataCmd->save();
 			}

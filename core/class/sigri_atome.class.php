@@ -535,11 +535,15 @@
 				//$dataCmd->addHistoryValue("19.29", date('H:i:s'));
 				// On sauvegarde cet événement
 
+				/*
 				$datetime = date("2019-01-27 19:19:19");
 				log::add('sigri_atome', 'debug', '$datetime1 : ' . $datetime);
 				$timestamp = date_timestamp_get($datetime);
 				//log::add('sigri_atome', 'debug', '$datetime2 : ' . $timestamp);
 				log::add('sigri_atome', 'debug', '$datetime3 : ' . $timestamp);
+				*/
+				$timestamp = "1548613159";
+				log::add('sigri_atome', 'debug', '$datetime4 : ' . $timestamp);
 				$datetime = date("H:i:s", $timestamp);
 				//$datetime = $datetime->format(date('H:i:s'));
 				log::add('sigri_atome', 'debug', '$datetime4 : ' . $datetime);

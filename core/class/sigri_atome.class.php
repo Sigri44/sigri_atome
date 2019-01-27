@@ -186,10 +186,10 @@
 				$json_error = json_decode($response);
 				if ($json_error->errors) {
 					if ($json_error->errors[0] == "Login Failed") {
-						log::add('sigri_atome', 'debug', '"Login Failed" à la connexion API, réessayez plus tard...');
+						log::add('sigri_atome', 'error', '"Login Failed" à la connexion API, réessayez plus tard...');
 						die();
 					} else {
-						log::add('sigri_atome', 'debug', 'Erreur à la connexion API : ' . $response);
+						log::add('sigri_atome', 'error', 'Erreur à la connexion API : ' . $response);
 						die();
 					}
 				}

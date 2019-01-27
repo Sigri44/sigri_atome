@@ -35,8 +35,54 @@
 		}
 		
 		public function postUpdate() {
-			log::add('sigri_atome', 'debug', 'Mise à jour de l\'équipement');
-			self::CronIsInstall();
+			log::add('sigri_atome', 'debug', 'Exécution de la fonction postUpdate');
+			//self::CronIsInstall();
+
+			// Création des commandes
+			$getDataCmd = $this->getCmd(null, 'data');
+			if (!is_object($getDataCmd)) {
+				// Création de la commande
+				$cmd = new sigri_atomeCmd();
+				// Nom affiché
+				$cmd->setName('Données');
+				// Identifiant de la commande
+				$cmd->setLogicalId('data');
+				// Identifiant de l'équipement
+				$cmd->setEqLogic_id($this->getId());
+				// Type de la commande
+				$cmd->setType('info');
+				// Sous-type de la commande
+				$cmd->setSubType('numeric');
+				// Visibilité de la commande
+				$cmd->setIsVisible(1);
+				// Sauvegarde de la commande
+				$cmd->save();
+				/*
+				$cmd->setUnite('kW');
+				$cmd->setIsHistorized(1);
+				$cmd->setEventOnly(1);
+				*/
+			}
+			$getDataCmd = $this->getCmd(null, 'refresh');
+			if (!is_object($getDataCmd)) {
+				// Création de la commande
+				$cmd = new sigri_atomeCmd();
+				// Nom affiché
+				$cmd->setName('Rafraichir');
+				// Identifiant de la commande
+				$cmd->setLogicalId('refresh');
+				// Identifiant de l'équipement
+				$cmd->setEqLogic_id($this->getId());
+				// Type de la commande
+				$cmd->setType('action');
+				// Sous-type de la commande
+				$cmd->setSubType('other');
+				// Visibilité de la commande
+				$cmd->setIsVisible(1);
+				// Sauvegarde de la commande
+				$cmd->save();
+			}
+			
 
 			if ($this->getIsEnable()) {
 				$cmd = $this->getCmd(null,'consoheure');
@@ -474,6 +520,8 @@
 	class sigri_atomeCmd extends cmd {
 		public function execute($_options = array()) {
 			log::add('sigri_atome', 'debug', 'Exécution d\'une commande');
+			log::add('sigri_atome', 'debug', '$this->getEqlogic_id() : ' . $this->getEqlogic_id());
+			log::add('sigri_atome', 'debug', '$this->getName() : ' . $this->getName());
 		}
 	}
 ?>

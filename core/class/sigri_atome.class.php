@@ -83,7 +83,6 @@
 			$eqLogics = eqLogic::byType('sigri_atome');
 			if (!empty($eqLogics)) {
 				foreach ($eqLogics as $eqLogic) {
-					log::add('sigri_atome', 'debug', '$eqLogic : ' . $eqLogic);
 					if ($eqLogic->getIsEnable() == 1) {
 						if (!empty($eqLogic->getConfiguration('identifiant')) && !empty($eqLogic->getConfiguration('password'))) {
 							log::add('sigri_atome', 'debug', 'Debug avant login');
@@ -105,6 +104,7 @@
 		public static function cronJournalier() {
 			log::add('sigri_atome', 'debug', '********** Etape 0 - Lancement du cronJournalier **********');
 			$eqLogics = eqLogic::byType('sigri_atome');
+			log::add('sigri_atome', 'debug', '$eqLogics : ' . $eqLogics);
 			foreach ($eqLogics as $eqLogic) {
 				if ($eqLogic->getIsEnable() == 1) {
 					if (!empty($eqLogic->getConfiguration('identifiant')) && !empty($eqLogic->getConfiguration('password'))) {

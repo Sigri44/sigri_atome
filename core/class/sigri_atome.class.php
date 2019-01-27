@@ -333,6 +333,16 @@
 							$sql = 'INSERT INTO sigri_atome_hour (hour, total_consumption, index_hp, index_hc, cost_hp, cost_hc) VALUES (\''.$datetime.'\', \''.$totalConsumption.'\', \''.$indexHP.'\', \''.$indexHC.'\', \''.$costHP.'\', \''.$costHC.'\') ON DUPLICATE KEY UPDATE total_consumption='.$totalConsumption.', index_hp='.$indexHP.', index_hc='.$indexHC.', cost_hp='.$costHP.', cost_hc='.$costHC.'';
 							$result = DB::Prepare($sql, array(), DB::FETCH_TYPE_ALL);
 							log::add('sigri_atome', 'debug', 'RQT $sql : ' . $sql);
+
+							// Test ajout fonction addHistoryValue
+							//$cmd = cmd::byName('consoheure');
+							//$eqLogic->checkAndUpdateCmd('consojour', $totalConsumption);
+							log::add('sigri_atome', 'debug', '$this : ' . $this);
+							log::add('sigri_atome', 'debug', '$this : ' . var_dump($this));
+							$cmd = $this->getCmd(null, 'consojour');
+							log::add('sigri_atome', 'debug', '$totalConsumption : ' . $totalConsumption);
+							log::add('sigri_atome', 'debug', '$datetime : ' . $datetime);
+							$cmd->addHistoryValue($totalConsumption, $datetime);
 							/*
 							$nbenreg = count($result);
 							log::add('sigri_atome', 'debug', 'Nombre d\'enregistrement "heure" effectués avec succès : '.$nbenreg);

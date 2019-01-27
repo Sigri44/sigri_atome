@@ -537,7 +537,8 @@
 
 				$datetime = date("2019-01-27 19:19:19");
 				log::add('sigri_atome', 'debug', '$datetime1 : ' . $datetime);
-				$datetime = $datetime->format(date('H:i:s'));
+				$datetime = date("H:i:s", $datetime);
+				//$datetime = $datetime->format(date('H:i:s'));
 				log::add('sigri_atome', 'debug', '$datetime2 : ' . $datetime);
 				$dataCmd->event($datetime);
 				$dataCmd->save();

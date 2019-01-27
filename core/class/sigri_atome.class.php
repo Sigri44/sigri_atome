@@ -179,16 +179,17 @@
 			if ($err) {
 				//log::add('sigri_atome', 'error', 'cURL Error n°'.$errno.' : ' . $err);
 				log::add('sigri_atome', 'error', 'cURL Error #:' . $err);
+				die();
 			} else {
-				log::add('sigri_atome', 'debug', '$response : ' . $response);
+				//log::add('sigri_atome', 'debug', '$response : ' . $response);
+				// Vérification du JSON retourné, si il contient une erreur
 				$json_error = json_decode($response);
-				//log::add('sigri_atome', 'debug', '$json_error["errors"] : ' . $json_error["errors"]);
-				//log::add('sigri_atome', 'debug', '$json_error["errors"][0] : ' . $json_error["errors"][0]);
 				if ($json_error->errors) {
-					log::add('sigri_atome', 'debug', 'La variable "errors" existe !');
-					log::add('sigri_atome', 'debug', '$json_error->errors[0] : ' . $json_error->errors[0]);
 					if ($json_error->errors[0] == "Login Failed") {
 						log::add('sigri_atome', 'debug', '"Login Failed" à la connexion API, réessayez plus tard...');
+						die();
+					} else {
+						log::add('sigri_atome', 'debug', 'Erreur à la connexion API : ' . $response);
 						die();
 					}
 				}

@@ -113,9 +113,9 @@
 						$period = "month";
 						$eqLogic->Call_Atome_API($json_connection, $period);
 					}
-				} else {
+				} /*else {
 					log::add('sigri_atome', 'error', 'Aucun équipement n\'est configuré/activé !');
-				}
+				}*/
 			}
 		}
 

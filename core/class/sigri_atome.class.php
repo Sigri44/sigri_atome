@@ -324,9 +324,6 @@
 							log::add('sigri_atome', 'debug', '$costHP : ' . $costHP);
 							log::add('sigri_atome', 'debug', '$costHC : ' . $costHC);
 							log::add('sigri_atome', 'debug', '************************************');
-							if ($indexHC == "0" && $indexHP == "0") {
-								log::add('sigri_atome', 'debug', '$indexHC && $indexHP sont égaux à 0 !!');
-							}
 
 							// Enregistrement de l'heure dans la BDD
 							log::add('sigri_atome', 'debug', 'Enregistrement dans la BDD en cours de l\'heure : '.$i);
@@ -337,7 +334,7 @@
 							// Test ajout fonction addHistoryValue
 							//$cmd = cmd::byName('consoheure');
 							//$eqLogic->checkAndUpdateCmd('consojour', $totalConsumption);
-							log::add('sigri_atome', 'debug', '$this : ' . $this);
+							//log::add('sigri_atome', 'debug', '$this : ' . $this);
 							log::add('sigri_atome', 'debug', '$this : ' . var_dump($this));
 							$cmd = $this->getCmd(null, 'consojour');
 							log::add('sigri_atome', 'debug', '$totalConsumption : ' . $totalConsumption);

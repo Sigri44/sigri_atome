@@ -539,7 +539,7 @@
 				log::add('sigri_atome', 'debug', '$datetime1 : ' . $datetime);
 				$timestamp = date_timestamp_get($datetime);
 				//log::add('sigri_atome', 'debug', '$datetime2 : ' . $timestamp);
-				log::add('sigri_atome', 'debug', '$datetime3 : ' . $datetime);
+				log::add('sigri_atome', 'debug', '$datetime3 : ' . $timestamp);
 				$datetime = date("H:i:s", $timestamp);
 				//$datetime = $datetime->format(date('H:i:s'));
 				log::add('sigri_atome', 'debug', '$datetime4 : ' . $datetime);

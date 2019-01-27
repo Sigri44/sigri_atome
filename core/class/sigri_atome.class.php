@@ -81,7 +81,7 @@
 		public static function cronHoraire() {
 			log::add('sigri_atome', 'debug', '********** Etape 0 - Lancement du cronHoraire **********');
 			$eqLogics = eqLogic::byType('sigri_atome');
-			log::add('sigri_atome', 'debug', '$eqLogic : ' . $eqLogics);
+			log::add('sigri_atome', 'debug', '$eqLogic : ' . var_dump($eqLogics));
 			foreach ($eqLogics as $eqLogic) {
 				log::add('sigri_atome', 'debug', '$eqLogic : ' . $eqLogic);
 				if ($eqLogic->getIsEnable() == 1) {

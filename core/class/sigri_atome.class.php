@@ -473,7 +473,7 @@
 
 	class sigri_atomeCmd extends cmd {
 		public function execute($_options = array()) {
-
+			log::add('sigri_atome', 'debug', 'Exécution d\'une commande');
 		}
 	}
 ?>

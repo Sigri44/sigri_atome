@@ -38,49 +38,6 @@
 			log::add('sigri_atome', 'debug', 'Exécution de la fonction postUpdate');
 			//self::CronIsInstall();
 
-			// Création des commandes
-			$getDataCmd = $this->getCmd(null, 'data');
-			if (!is_object($getDataCmd)) {
-				// Création de la commande
-				$cmd = new sigri_atomeCmd();
-				// Nom affiché
-				$cmd->setName('Données');
-				// Identifiant de la commande
-				$cmd->setLogicalId('data');
-				// Identifiant de l'équipement
-				$cmd->setEqLogic_id($this->getId());
-				// Type de la commande
-				$cmd->setType('info');
-				// Sous-type de la commande
-				$cmd->setSubType('string');
-				// Visibilité de la commande
-				$cmd->setIsVisible(1);
-				// Historisation de la commande
-				$cmd->setIsHistorized(1);
-				// Sauvegarde de la commande
-				$cmd->save();
-			}
-			$getDataCmd = $this->getCmd(null, 'refresh');
-			if (!is_object($getDataCmd)) {
-				// Création de la commande
-				$cmd = new sigri_atomeCmd();
-				// Nom affiché
-				$cmd->setName('Rafraichir');
-				// Identifiant de la commande
-				$cmd->setLogicalId('refresh');
-				// Identifiant de l'équipement
-				$cmd->setEqLogic_id($this->getId());
-				// Type de la commande
-				$cmd->setType('action');
-				// Sous-type de la commande
-				$cmd->setSubType('other');
-				// Visibilité de la commande
-				$cmd->setIsVisible(1);
-				// Sauvegarde de la commande
-				$cmd->save();
-			}
-			
-
 			if ($this->getIsEnable()) {
 				$cmd = $this->getCmd(null,'consoheure');
 				if (!is_object($cmd)) {
@@ -372,30 +329,9 @@
 							log::add('sigri_atome', 'debug', 'RQT $sql : ' . $sql);
 
 							// Historisation de la valeur dans Jeedom
-							//$obj = $json_data;
 							$cmd = $this->getCmd(null, 'consoheure');
-							//$delta = "1 hour";
-							//$start_date = $datetime //(déjà formatté)
-							//$value = $totalConsumption; // OK
 							log::add('sigri_atome', 'debug', 'Date : : ' . $datetime . ' : Indice : ' . $totalConsumption . ' kWh');
 							$cmd->event($totalConsumption, $datetime);
-
-							/*
-							// Test ajout fonction addHistoryValue
-							//$cmd = cmd::byName('consoheure');
-							//$eqLogic->checkAndUpdateCmd('consojour', $totalConsumption);
-							$cmd = $this->getCmd(null, 'consojour');
-							$cmd = cmd::getCmd(null, 'consojour');
-							log::add('sigri_atome', 'debug', '$totalConsumption : ' . $totalConsumption);
-							log::add('sigri_atome', 'debug', '$datetime : ' . $datetime);
-							$cmd->addHistoryValue($totalConsumption, $datetime);
-							*/
-
-
-							/*
-							$nbenreg = count($result);
-							log::add('sigri_atome', 'debug', 'Nombre d\'enregistrement "heure" effectués avec succès : '.$nbenreg);
-							*/
 						}
 					} elseif ($period == "month") {
 						for ($i = 0; $i<31; $i++) {
@@ -426,10 +362,11 @@
 							$sql = 'INSERT INTO sigri_atome_day (day, total_consumption, index_hp, index_hc, cost_hp, cost_hc) VALUES (\''.$date.'\', \''.$totalConsumption.'\', \''.$indexHP.'\', \''.$indexHC.'\', \''.$costHP.'\', \''.$costHC.'\') ON DUPLICATE KEY UPDATE total_consumption='.$totalConsumption.', index_hp='.$indexHP.', index_hc='.$indexHC.', cost_hp='.$costHP.', cost_hc='.$costHC.'';
 							$result = DB::Prepare($sql, array(), DB::FETCH_TYPE_ALL);
 							log::add('sigri_atome', 'debug', 'RQT $sql : ' . $sql);
-							/*
-							$nbenreg = count($result);
-							log::add('sigri_atome', 'debug', 'Nombre d\'enregistrement "jour" effectués avec succès : '.$nbenreg);
-							*/
+							
+							// Historisation de la valeur dans Jeedom
+							$cmd = $this->getCmd(null, 'consojour');
+							log::add('sigri_atome', 'debug', 'Date : : ' . $datetime . ' : Indice : ' . $totalConsumption . ' kWh');
+							$cmd->event($totalConsumption, $datetime);
 						}
 					}
 				} else {
@@ -524,41 +461,6 @@
 
 	class sigri_atomeCmd extends cmd {
 		public function execute($_options = array()) {
-			/*
-			log::add('sigri_atome', 'debug', 'Exécution d\'une commande');
-			log::add('sigri_atome', 'debug', '$this->getEqlogic_id() : ' . $this->getEqlogic_id());
-			log::add('sigri_atome', 'debug', '$this->getName() : ' . $this->getName());
-			*/
-
-			// Test pour ne répondre qu'à la commande rafraichir
-			if ($this->getLogicalId() == 'refresh') {
-				// On récupère l'équipement à partir de l'identifiant fournit par la commande
-				$sigriObj = sigri_atome::byId($this->getEqlogic_id());
-				// On récupère la commande 'data' appartenant à l'équipement
-				//$dataCmd = $sigriObj->getCmd('info', 'data');
-				$dataCmd = $sigriObj->getCmd(null, 'consojour');
-				// On lui ajoute un événement avec pour information 'Données de test'
-				//$dataCmd->event(date('H:i:s'));
-				// Ajout d'une valeur en historique
-				//$dataCmd->addHistoryValue("19.19", "19:19:19");
-				//$dataCmd->addHistoryValue("19.29", date('H:i:s'));
-				// On sauvegarde cet événement
-
-				/*
-				$datetime = date("2019-01-27 19:19:19");
-				log::add('sigri_atome', 'debug', '$datetime1 : ' . $datetime);
-				$timestamp = date_timestamp_get($datetime);
-				//log::add('sigri_atome', 'debug', '$datetime2 : ' . $timestamp);
-				log::add('sigri_atome', 'debug', '$datetime3 : ' . $timestamp);
-				*/
-				$timestamp = "1548613159";
-				log::add('sigri_atome', 'debug', '$datetime4 : ' . $timestamp);
-				$datetime = date("H:i:s", $timestamp);
-				//$datetime = $datetime->format(date('H:i:s'));
-				log::add('sigri_atome', 'debug', '$datetime4 : ' . $datetime);
-				$dataCmd->addHistoryValue("19.29", $datetime);
-				//$dataCmd->event($datetime);
-				$dataCmd->save();
 			}
 		}
 	}

@@ -52,7 +52,7 @@
 				// Type de la commande
 				$cmd->setType('info');
 				// Sous-type de la commande
-				$cmd->setSubType('numeric');
+				$cmd->setSubType('string');
 				// Visibilité de la commande
 				$cmd->setIsVisible(1);
 				// Sauvegarde de la commande
@@ -522,6 +522,18 @@
 			log::add('sigri_atome', 'debug', 'Exécution d\'une commande');
 			log::add('sigri_atome', 'debug', '$this->getEqlogic_id() : ' . $this->getEqlogic_id());
 			log::add('sigri_atome', 'debug', '$this->getName() : ' . $this->getName());
+
+			// Test pour ne répondre qu'à la commande rafraichir
+			if ($this->getLogicalId() == 'refresh') {
+				// On récupère l'équipement à partir de l'identifiant fournit par la commande
+				$sigriObj = sigri_atome::byId($this->getLogicalId());
+				// On récupère la commande 'data' appartenant à l'équipement
+				$dataCmd = $sigriObj->getCmd('info', 'data');
+				// On lui ajoute un événement avec pour information 'Données de test'
+				$dataCmd->event(date('H:i'));
+				// On sauvegarde cet événement
+				$dataCmd->save();
+			}
 		}
 	}
 ?>

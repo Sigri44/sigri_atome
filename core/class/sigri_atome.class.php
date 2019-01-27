@@ -104,7 +104,7 @@
 		public static function cronJournalier() {
 			log::add('sigri_atome', 'debug', '********** Etape 0 - Lancement du cronJournalier **********');
 			$eqLogics = eqLogic::byType('sigri_atome');
-			log::add('sigri_atome', 'debug', '$eqLogics : ' . $eqLogics);
+			log::add('sigri_atome', 'debug', '$eqLogics : ' . var_dump($eqLogics));
 			foreach ($eqLogics as $eqLogic) {
 				if ($eqLogic->getIsEnable() == 1) {
 					if (!empty($eqLogic->getConfiguration('identifiant')) && !empty($eqLogic->getConfiguration('password'))) {
@@ -179,7 +179,7 @@
 				log::add('sigri_atome', 'error', 'cURL Error #:' . $err);
 				die();
 			} else {
-				//log::add('sigri_atome', 'debug', '$response : ' . $response);
+				log::add('sigri_atome', 'debug', '$response : ' . $response);
 				// Vérification du JSON retourné, si il contient une erreur
 				$json_error = json_decode($response);
 				if ($json_error->errors) {

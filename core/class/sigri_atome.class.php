@@ -55,6 +55,8 @@
 				$cmd->setSubType('string');
 				// Visibilité de la commande
 				$cmd->setIsVisible(1);
+				// Historisation de la commande
+				$cmd->setIsHistorized(1);
 				// Sauvegarde de la commande
 				$cmd->save();
 			}
@@ -525,7 +527,7 @@
 				// On récupère la commande 'data' appartenant à l'équipement
 				$dataCmd = $sigriObj->getCmd('info', 'data');
 				// On lui ajoute un événement avec pour information 'Données de test'
-				$dataCmd->event(date('H:i'));
+				$dataCmd->event(date('H:i:s'));
 				// On sauvegarde cet événement
 				$dataCmd->save();
 			}

@@ -81,7 +81,7 @@
 		public static function cronHoraire() {
 			log::add('sigri_atome', 'debug', '********** Etape 0 - Lancement du cronHoraire **********');
 			$eqLogics = eqLogic::byType('sigri_atome');
-			if (!empty($eqLogics)) {
+			//if (!empty($eqLogics)) {
 				foreach ($eqLogics as $eqLogic) {
 					if ($eqLogic->getIsEnable() == 1) {
 						if (!empty($eqLogic->getConfiguration('identifiant')) && !empty($eqLogic->getConfiguration('password'))) {
@@ -92,19 +92,17 @@
 							$period = "day";
 							$eqLogic->Call_Atome_API($json_connection, $period);
 						}
-					} else {
+					}/* else {
 						log::add('sigri_atome', 'error', 'Aucun équipement n\'est configuré/activé !');
-					}
+					}*/
 				}
-			} else {
+			/*} else {
 				log::add('sigri_atome', 'error', 'Aucun équipement n\'est configuré/activé !');
-			}
+			}*/
 		}
 
 		public static function cronJournalier() {
 			log::add('sigri_atome', 'debug', '********** Etape 0 - Lancement du cronJournalier **********');
-			$eqLogics = eqLogic::byType('sigri_atome');
-			log::add('sigri_atome', 'debug', '$eqLogics : ' . var_dump($eqLogics));
 			foreach ($eqLogics as $eqLogic) {
 				if ($eqLogic->getIsEnable() == 1) {
 					if (!empty($eqLogic->getConfiguration('identifiant')) && !empty($eqLogic->getConfiguration('password'))) {

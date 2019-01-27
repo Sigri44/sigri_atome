@@ -527,7 +527,8 @@
 				// On récupère l'équipement à partir de l'identifiant fournit par la commande
 				$sigriObj = sigri_atome::byId($this->getEqlogic_id());
 				// On récupère la commande 'data' appartenant à l'équipement
-				$dataCmd = $sigriObj->getCmd('info', 'data');
+				//$dataCmd = $sigriObj->getCmd('info', 'data');
+				$dataCmd = $sigriObj->getCmd(null, 'consojour');
 				// On lui ajoute un événement avec pour information 'Données de test'
 				//$dataCmd->event(date('H:i:s'));
 				// Ajout d'une valeur en historique

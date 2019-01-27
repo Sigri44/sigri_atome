@@ -36,7 +36,7 @@
 		
 		public function postUpdate() {
 			log::add('sigri_atome', 'debug', 'Exécution de la fonction postUpdate');
-			//self::CronIsInstall();
+			self::CronIsInstall();
 
 			if ($this->getIsEnable()) {
 				$cmd = $this->getCmd(null,'consoheure');

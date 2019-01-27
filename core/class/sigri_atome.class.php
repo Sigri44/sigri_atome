@@ -303,6 +303,19 @@
 							$costHP = $json_data->data[$i]->consumption->bill2;
 							$costHC = $json_data->data[$i]->consumption->bill1;
 
+							// Debug affichage des values SQL
+							log::add('sigri_atome', 'debug', '************ VALUES SQL ************');
+							log::add('sigri_atome', 'debug', '$datetime : ' . $datetime);
+							log::add('sigri_atome', 'debug', '$totalConsumption : ' . $totalConsumption);
+							log::add('sigri_atome', 'debug', '$indexHP : ' . $indexHP);
+							log::add('sigri_atome', 'debug', '$indexHC : ' . $indexHC);
+							log::add('sigri_atome', 'debug', '$costHP : ' . $costHP);
+							log::add('sigri_atome', 'debug', '$costHC : ' . $costHC);
+							log::add('sigri_atome', 'debug', '************************************');
+							if ($indexHC == "0" && $indexHP == "0") {
+								log::add('sigri_atome', 'debug', '$indexHC && $indexHP sont égaux à 0 !!');
+							}
+
 							// Enregistrement de l'heure dans la BDD
 							log::add('sigri_atome', 'debug', 'Enregistrement dans la BDD en cours de l\'heure : '.$i);
 							$sql = 'INSERT INTO sigri_atome_hour (hour, total_consumption, index_hp, index_hc, cost_hp, cost_hc) VALUES (\''.$datetime.'\', \''.$totalConsumption.'\', \''.$indexHP.'\', \''.$indexHC.'\', \''.$costHP.'\', \''.$costHC.'\') ON DUPLICATE KEY UPDATE total_consumption='.$totalConsumption.', index_hp='.$indexHP.', index_hc='.$indexHC.', cost_hp='.$costHP.', cost_hc='.$costHC.'';
@@ -323,6 +336,19 @@
 							$indexHC = $json_data->data[$i]->consumption->index1;
 							$costHP = $json_data->data[$i]->consumption->bill2;
 							$costHC = $json_data->data[$i]->consumption->bill1;
+
+							// Debug affichage des values SQL
+							log::add('sigri_atome', 'debug', '************ VALUES SQL ************');
+							log::add('sigri_atome', 'debug', '$datetime : ' . $datetime);
+							log::add('sigri_atome', 'debug', '$totalConsumption : ' . $totalConsumption);
+							log::add('sigri_atome', 'debug', '$indexHP : ' . $indexHP);
+							log::add('sigri_atome', 'debug', '$indexHC : ' . $indexHC);
+							log::add('sigri_atome', 'debug', '$costHP : ' . $costHP);
+							log::add('sigri_atome', 'debug', '$costHC : ' . $costHC);
+							log::add('sigri_atome', 'debug', '************************************');
+							if ($indexHC == "0" && $indexHP == "0") {
+								log::add('sigri_atome', 'debug', '$indexHC && $indexHP sont égaux à 0 !!');
+							}
 
 							// Enregistrement du jour dans la BDD
 							log::add('sigri_atome', 'debug', 'Enregistrement dans la BDD en cours du jour : '.$i);

@@ -31,9 +31,10 @@
 	}
 	
 	function sigri_atome_remove() {
+		// Empêche de supprimer les crons
+		//return;
 
-		return;
-
+		/*
 		$cron = cron::byClassAndFunction('sigri_atome', 'launch_sigri_atome');
 		if (is_object($cron)) {
 			log::add('sigri_atome', 'debug', 'Arrêt du cron launch_sigri_atome');
@@ -41,6 +42,7 @@
 			log::add('sigri_atome', 'debug', 'Suppression du cron launch_sigri_atome');
 			$cron->remove();
 		}
+		*/
 
 		$cron = cron::byClassAndFunction('sigri_atome', 'cronHoraire');
 		if (is_object($cron)) {
@@ -58,10 +60,23 @@
 			$cron->remove();
 		}
 
+		// Suppression de la Database uniquement si la case est cochée
+		log::add('sigri_atome', 'debug', '$eqLogic->getConfiguration(\'isDrop\') : ' . $eqLogic->getConfiguration('isDrop'));
+		log::add('sigri_atome', 'debug', '$eqLogic->getConfiguration(\'saveIntoDatabase\') : ' . $eqLogic->getConfiguration('saveIntoDatabase'));
+		log::add('sigri_atome', 'debug', '$eqLogic->getConfiguration(\'saveIntoJson\') : ' . $eqLogic->getConfiguration('saveIntoJson'));
+		if ($eqLogic->getConfiguration('isDrop')) {
+			log::add('sigri_atome', 'debug', 'Valeur isDrop : ' . $sigri_atome->getConfiguration('isDrop'));
+			log::add('sigri_atome', 'debug', 'Valeur isDrop : ' . $sigri_atome->getIsDrop);
+		} else {
+			log::add('sigri_atome', 'debug', 'Valeur isDrop : ' . $eqLogic->getConfiguration('isDrop'));
+			log::add('sigri_atome', 'debug', 'Valeur isDrop : ' . $sigri_atome->getIsDrop);
+		}
+		/*
 		$sql = "DROP TABLE IF EXISTS `sigri_atome_hour`;";
 		DB::Prepare($sql, array(), DB::FETCH_TYPE_ROW);
 
 		$sql = "DROP TABLE IF EXISTS `sigri_atome_day`;";
 		DB::Prepare($sql, array(), DB::FETCH_TYPE_ROW);
+		*/
 	}
 ?>

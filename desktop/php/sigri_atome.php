@@ -22,15 +22,15 @@
 	</div>
 	
 	<div class="col-lg-10 col-md-9 col-sm-8 eqLogicThumbnailDisplay" style="border-left: solid 1px #EEE; padding-left: 25px;">
-		<legend>{{Mes comptes Atome}}
-		</legend>
-		
+		<legend>{{Mes comptes Atome}}</legend>
 		<div class="eqLogicThumbnailContainer">
 			<div class="cursor eqLogicAction" data-action="add" style="background-color : #ffffff; height : 200px;margin-bottom : 10px;padding : 5px;border-radius: 2px;width : 160px;margin-left : 10px;" >
 				<center>
 					<i class="fa fa-plus-circle" style="font-size : 7em;color:#94ca02;"></i>
 				</center>
-				<span style="font-size : 1.1em;position:relative; top : 23px;word-break: break-all;white-space: pre-wrap;word-wrap: break-word;color:#94ca02"><center>{{Ajouter}}</center></span>
+				<span style="font-size : 1.1em;position:relative; top : 23px;word-break: break-all;white-space: pre-wrap;word-wrap: break-word;color:#94ca02">
+					<center>{{Ajouter}}</center>
+				</span>
 			</div>
 			<?php
 				foreach ($eqLogics as $eqLogic) {
@@ -88,11 +88,30 @@
 						<input type="password" class="eqLogicAttr configuration form-control" data-l1key="configuration" data-l2key="password" placeholder="Mot de passe du compte Atome"/>
 					</div>
 				</div>
+				<!-- Configuration avancée -->
+				<div class="form-group">
+					<label class="col-sm-3 control-label">{{Vider les tables SQL à la désinstallation ?}}</label>
+					<div class="col-sm-3">
+						<label class="checkbox-inline"><input type="checkbox" class="eqLogicAttr" data-label-text="{{DropDatabase}}" data-l1key="isDrop" />Oui</label>
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="col-sm-3 control-label">{{Enregistrer le résultat en BDD ?}}</label>
+					<div class="col-sm-3">
+						<label class="checkbox-inline"><input type="checkbox" class="eqLogicAttr" data-label-text="{{SaveIntoDatabase}}" data-l1key="saveIntoDatabase" checked />Oui</label>
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="col-sm-3 control-label">{{Enregistrer le résultat en JSON ?}}</label>
+					<div class="col-sm-3">
+						<label class="checkbox-inline"><input type="checkbox" class="eqLogicAttr" data-label-text="{{SaveIntoJson}}" data-l1key="saveIntoJson" />Oui</label>
+					</div>
+				</div>
 			</fieldset>
 		</form>
 		
 		<legend>{{Type de télémétrie}}</legend>
-		<a class="btn btn-success btn-sm cmdAction" data-action="add"><i class="fa fa-plus-circle"></i> {{Commandes}}</a><br/><br/>
+		<a class="btn btn-success btn-sm cmdAction" data-action="add"><i class="fa fa-plus-circle"></i>{{Commandes}}</a><br/><br/>
 		<table id="table_cmd" class="table table-bordered table-condensed">
 			<thead>
 				<tr>

@@ -91,6 +91,8 @@
 						$period = "day";
 						$eqLogic->Call_Atome_API($json_connection, $period);
 					}
+				} else {
+					log::add('sigri_atome', 'error', 'Aucun équipement n\'est configuré/activé !');
 				}
 			}
 		}
@@ -101,15 +103,15 @@
 			foreach ($eqLogics as $eqLogic) {
 				if ($eqLogic->getIsEnable() == 1) {
 					if (!empty($eqLogic->getConfiguration('identifiant')) && !empty($eqLogic->getConfiguration('password'))) {
-						/*
 						log::add('sigri_atome', 'debug', 'Debug avant login');
 						log::add('sigri_atome', 'debug', 'Login : '.$eqLogic->getConfiguration('identifiant'));
 						log::add('sigri_atome', 'debug', 'Password : '.$eqLogic->getConfiguration('password'));
-						*/
 						$json_connection = $eqLogic->Call_Atome_Login($eqLogic->getConfiguration('identifiant'), $eqLogic->getConfiguration('password'));
 						$period = "month";
 						$eqLogic->Call_Atome_API($json_connection, $period);
 					}
+				} else {
+					log::add('sigri_atome', 'error', 'Aucun équipement n\'est configuré/activé !');
 				}
 			}
 		}

@@ -300,6 +300,8 @@
 						for ($i = 0; $i<25; $i++) {
 							// Extraction des data énergie
 							$json_data = json_decode($response);
+							log::add('sigri_atome', 'debug', '$response : ' . $response);
+
 							$date = substr($json_data->data[$i]->time, 0, 10);
 							$time = substr($json_data->data[$i]->time, 11, 8);
 							// Ajout d'1h pour corriger le fuseau horaire
@@ -327,6 +329,8 @@
 							$result = DB::Prepare($sql, array(), DB::FETCH_TYPE_ALL);
 							log::add('sigri_atome', 'debug', 'RQT $sql : ' . $sql);
 
+
+							/*
 							// Test ajout fonction addHistoryValue
 							//$cmd = cmd::byName('consoheure');
 							//$eqLogic->checkAndUpdateCmd('consojour', $totalConsumption);
@@ -335,6 +339,9 @@
 							log::add('sigri_atome', 'debug', '$totalConsumption : ' . $totalConsumption);
 							log::add('sigri_atome', 'debug', '$datetime : ' . $datetime);
 							$cmd->addHistoryValue($totalConsumption, $datetime);
+							*/
+
+
 							/*
 							$nbenreg = count($result);
 							log::add('sigri_atome', 'debug', 'Nombre d\'enregistrement "heure" effectués avec succès : '.$nbenreg);

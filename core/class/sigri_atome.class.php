@@ -425,7 +425,7 @@
 				$cron->setFunction('cronHoraire');
 				$cron->setEnable(1);
 				$cron->setDeamon(0);
-				$cron->setSchedule("0 * * * *");
+				$cron->setSchedule("59 * * * *");
 				$cron->save();
 			} else {
 				log::add('sigri_atome', 'debug', 'Cron cronHoraire existe déjà');
@@ -439,7 +439,7 @@
 				$cron->setFunction('cronJournalier');
 				$cron->setEnable(1);
 				$cron->setDeamon(0);
-				$cron->setSchedule("0 0 * * *");
+				$cron->setSchedule("59 23 * * *");
 				$cron->save();
 			} else {
 				log::add('sigri_atome', 'debug', 'Cron cronJournalier existe déjà');

@@ -19,7 +19,7 @@
 	
 	function sigri_atome_install() {
 		log::add('sigri_atome', 'debug', 'Installation du plugin sigri_atome');
-		exec('sudo chmod 775'.dirname(__FILE__).'../ressources/cokkies.txt');
+		exec('sudo chmod 775'.dirname(__FILE__).'../ressources/cookies.txt');
 		exec('sudo chmod 775'.dirname(__FILE__).'../ressources/atome_connection.json');
 		exec('sudo chmod 777'.dirname(__FILE__).'/install.sql');
 		$sql = file_get_contents(dirname(__FILE__).'/install.sql');

@@ -9,6 +9,8 @@
 - Not Update if NewValue < OldValue
 - Select old period
 - Add month/year command
+- Add Backup/Export DB (SQL)
+- Add Import/Restore DB (SQL)
 
 ## Versions
 

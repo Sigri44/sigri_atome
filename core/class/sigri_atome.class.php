@@ -313,8 +313,7 @@
 							//$sql = 'INSERT INTO sigri_atome_hour (hour, total_consumption, index_hp, index_hc, cost_hp, cost_hc) VALUES (\''.$datetime.'\', \''.$totalConsumption.'\', \''.$indexHP.'\', \''.$indexHC.'\', \''.$costHP.'\', \''.$costHC.'\') ON DUPLICATE KEY UPDATE total_consumption='.$totalConsumption.', index_hp='.$indexHP.', index_hc='.$indexHC.', cost_hp='.$costHP.', cost_hc='.$costHC;
 							$sql = 'INSERT INTO sigri_atome_hour (hour, total_consumption, index_hp, index_hc, cost_hp, cost_hc) VALUES (\''.$datetime.'\', \''.$totalConsumption.'\', \''.$indexHP.'\', \''.$indexHC.'\', \''.$costHP.'\', \''.$costHC.'\') ON DUPLICATE KEY UPDATE hour="'.$datetime.'"';
                             log::add('sigri_atome', 'debug', 'RQT $sql : ' . $sql);
-                            $result = DB::Prepare($sql, array(), DB::FETCH_TYPE_ALL);
-                            log::add('sigri_atome', 'debug', '$result : ' . $result);
+                            DB::Prepare($sql, array(), DB::FETCH_TYPE_ALL);
 
                             // Historisation de la valeur dans Jeedom
 							$cmd = $this->getCmd(null, 'consoheure');
@@ -351,7 +350,7 @@
 							//$sql = 'INSERT INTO sigri_atome_day (day, total_consumption, index_hp, index_hc, cost_hp, cost_hc) VALUES (\''.$date.'\', \''.$totalConsumption.'\', \''.$indexHP.'\', \''.$indexHC.'\', \''.$costHP.'\', \''.$costHC.'\') ON DUPLICATE KEY UPDATE total_consumption='.$totalConsumption.', index_hp='.$indexHP.', index_hc='.$indexHC.', cost_hp='.$costHP.', cost_hc='.$costHC;
 							$sql = 'INSERT INTO sigri_atome_day (day, total_consumption, index_hp, index_hc, cost_hp, cost_hc) VALUES (\''.$date.'\', \''.$totalConsumption.'\', \''.$indexHP.'\', \''.$indexHC.'\', \''.$costHP.'\', \''.$costHC.'\') ON DUPLICATE KEY UPDATE day = "'.$date.'"';
                             log::add('sigri_atome', 'debug', $i.' - RQT $sql : ' . $sql);
-                            $result = DB::Prepare($sql, array(), DB::FETCH_TYPE_ALL);
+                            DB::Prepare($sql, array(), DB::FETCH_TYPE_ALL);
 
 							// Historisation de la valeur dans Jeedom
 							$cmd = $this->getCmd(null, 'consojour');

@@ -310,11 +310,13 @@
 
 							// Enregistrement de l'heure dans la BDD
 							log::add('sigri_atome', 'debug', 'Enregistrement dans la BDD en cours de l\'heure : '.$i);
-							$sql = 'INSERT INTO sigri_atome_hour (hour, total_consumption, index_hp, index_hc, cost_hp, cost_hc) VALUES (\''.$datetime.'\', \''.$totalConsumption.'\', \''.$indexHP.'\', \''.$indexHC.'\', \''.$costHP.'\', \''.$costHC.'\') ON DUPLICATE KEY UPDATE total_consumption='.$totalConsumption.', index_hp='.$indexHP.', index_hc='.$indexHC.', cost_hp='.$costHP.', cost_hc='.$costHC;
-							$result = DB::Prepare($sql, array(), DB::FETCH_TYPE_ALL);
-							log::add('sigri_atome', 'debug', 'RQT $sql : ' . $sql);
+							//$sql = 'INSERT INTO sigri_atome_hour (hour, total_consumption, index_hp, index_hc, cost_hp, cost_hc) VALUES (\''.$datetime.'\', \''.$totalConsumption.'\', \''.$indexHP.'\', \''.$indexHC.'\', \''.$costHP.'\', \''.$costHC.'\') ON DUPLICATE KEY UPDATE total_consumption='.$totalConsumption.', index_hp='.$indexHP.', index_hc='.$indexHC.', cost_hp='.$costHP.', cost_hc='.$costHC;
+							$sql = 'INSERT INTO sigri_atome_hour (hour, total_consumption, index_hp, index_hc, cost_hp, cost_hc) VALUES (\''.$datetime.'\', \''.$totalConsumption.'\', \''.$indexHP.'\', \''.$indexHC.'\', \''.$costHP.'\', \''.$costHC.'\') ON DUPLICATE KEY UPDATE hour="'.$datetime.'"';
+                            log::add('sigri_atome', 'debug', 'RQT $sql : ' . $sql);
+                            $result = DB::Prepare($sql, array(), DB::FETCH_TYPE_ALL);
+                            log::add('sigri_atome', 'debug', '$result : ' . $result);
 
-							// Historisation de la valeur dans Jeedom
+                            // Historisation de la valeur dans Jeedom
 							$cmd = $this->getCmd(null, 'consoheure');
 							$totalConsumption = $totalConsumption / 1000;
 							log::add('sigri_atome', 'debug', 'Date : : ' . $datetime . ' : Indice : ' . $totalConsumption . ' kWh');

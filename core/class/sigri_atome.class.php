@@ -332,14 +332,14 @@
 							$costHC = $json_data->data[$i]->consumption->bill1;
 
 							// Debug affichage des values SQL
-							log::add('sigri_atome', 'debug', '************ VALUES SQL ************');
-							log::add('sigri_atome', 'debug', '$date : ' . $date);
-							log::add('sigri_atome', 'debug', '$totalConsumption : ' . $totalConsumption);
-							log::add('sigri_atome', 'debug', '$indexHP : ' . $indexHP);
-							log::add('sigri_atome', 'debug', '$indexHC : ' . $indexHC);
-							log::add('sigri_atome', 'debug', '$costHP : ' . $costHP);
-							log::add('sigri_atome', 'debug', '$costHC : ' . $costHC);
-							log::add('sigri_atome', 'debug', '************************************');
+							log::add('sigri_atome', 'debug', $i.' - ************ VALUES SQL ************');
+							log::add('sigri_atome', 'debug', $i.' - $date : ' . $date);
+							log::add('sigri_atome', 'debug', $i.' - $totalConsumption : ' . $totalConsumption);
+							log::add('sigri_atome', 'debug', $i.' - $indexHP : ' . $indexHP);
+							log::add('sigri_atome', 'debug', $i.' - $indexHC : ' . $indexHC);
+							log::add('sigri_atome', 'debug', $i.' - $costHP : ' . $costHP);
+							log::add('sigri_atome', 'debug', $i.' - $costHC : ' . $costHC);
+							log::add('sigri_atome', 'debug', $i.' - ************************************');
 							if ($indexHC == "0" && $indexHP == "0") {
 								log::add('sigri_atome', 'debug', '$indexHC && $indexHP sont égaux à 0 !!');
 							}
@@ -349,12 +349,12 @@
 							//$sql = 'INSERT INTO sigri_atome_day (day, total_consumption, index_hp, index_hc, cost_hp, cost_hc) VALUES (\''.$date.'\', \''.$totalConsumption.'\', \''.$indexHP.'\', \''.$indexHC.'\', \''.$costHP.'\', \''.$costHC.'\') ON DUPLICATE KEY UPDATE total_consumption='.$totalConsumption.', index_hp='.$indexHP.', index_hc='.$indexHC.', cost_hp='.$costHP.', cost_hc='.$costHC;
 							$sql = 'INSERT INTO sigri_atome_day (day, total_consumption, index_hp, index_hc, cost_hp, cost_hc) VALUES (\''.$date.'\', \''.$totalConsumption.'\', \''.$indexHP.'\', \''.$indexHC.'\', \''.$costHP.'\', \''.$costHC.'\') ON DUPLICATE KEY UPDATE day = '.$date;
 							$result = DB::Prepare($sql, array(), DB::FETCH_TYPE_ALL);
-							log::add('sigri_atome', 'debug', 'RQT $sql : ' . $sql);
+							log::add('sigri_atome', 'debug', $i.' - RQT $sql : ' . $sql);
 							
 							// Historisation de la valeur dans Jeedom
 							$cmd = $this->getCmd(null, 'consojour');
 							$totalConsumption = $totalConsumption / 1000;
-							log::add('sigri_atome', 'debug', 'Date : : ' . $date . ' : Indice : ' . $totalConsumption . ' kWh');
+							log::add('sigri_atome', 'debug', $i.' - Date : : ' . $date . ' : Indice : ' . $totalConsumption . ' kWh');
 							$cmd->event($totalConsumption, $date);
 						}
 					}

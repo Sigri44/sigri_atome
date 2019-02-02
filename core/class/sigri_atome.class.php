@@ -348,9 +348,9 @@
 							log::add('sigri_atome', 'debug', 'Enregistrement dans la BDD en cours du jour : '.$i);
 							//$sql = 'INSERT INTO sigri_atome_day (day, total_consumption, index_hp, index_hc, cost_hp, cost_hc) VALUES (\''.$date.'\', \''.$totalConsumption.'\', \''.$indexHP.'\', \''.$indexHC.'\', \''.$costHP.'\', \''.$costHC.'\') ON DUPLICATE KEY UPDATE total_consumption='.$totalConsumption.', index_hp='.$indexHP.', index_hc='.$indexHC.', cost_hp='.$costHP.', cost_hc='.$costHC;
 							$sql = 'INSERT INTO sigri_atome_day (day, total_consumption, index_hp, index_hc, cost_hp, cost_hc) VALUES (\''.$date.'\', \''.$totalConsumption.'\', \''.$indexHP.'\', \''.$indexHC.'\', \''.$costHP.'\', \''.$costHC.'\') ON DUPLICATE KEY UPDATE day = '.$date;
-							$result = DB::Prepare($sql, array(), DB::FETCH_TYPE_ALL);
-							log::add('sigri_atome', 'debug', $i.' - RQT $sql : ' . $sql);
-							
+                            log::add('sigri_atome', 'debug', $i.' - RQT $sql : ' . $sql);
+                            $result = DB::Prepare($sql, array(), DB::FETCH_TYPE_ALL);
+
 							// Historisation de la valeur dans Jeedom
 							$cmd = $this->getCmd(null, 'consojour');
 							$totalConsumption = $totalConsumption / 1000;

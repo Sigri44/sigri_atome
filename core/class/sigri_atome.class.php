@@ -311,8 +311,8 @@
 							// Enregistrement de l'heure dans la BDD
 							log::add('sigri_atome', 'debug', 'Enregistrement dans la BDD en cours de l\'heure : '.$i);
 							//$sql = 'INSERT INTO sigri_atome_hour (hour, total_consumption, index_hp, index_hc, cost_hp, cost_hc) VALUES (\''.$datetime.'\', \''.$totalConsumption.'\', \''.$indexHP.'\', \''.$indexHC.'\', \''.$costHP.'\', \''.$costHC.'\') ON DUPLICATE KEY UPDATE total_consumption='.$totalConsumption.', index_hp='.$indexHP.', index_hc='.$indexHC.', cost_hp='.$costHP.', cost_hc='.$costHC;
-							//$sql = 'INSERT INTO sigri_atome_hour (hour, total_consumption, index_hp, index_hc, cost_hp, cost_hc) VALUES (\''.$datetime.'\', \''.$totalConsumption.'\', \''.$indexHP.'\', \''.$indexHC.'\', \''.$costHP.'\', \''.$costHC.'\') ON DUPLICATE KEY UPDATE hour="'.$datetime.'"';
-							$sql = 'UPDATE sigri_atome_hour SET hour = \''.$datetime.'\', total_consumption = \''.$totalConsumption.'\', index_hp = \''.$indexHP.'\', index_hc = \''.$indexHC.'\', cost_hp = \''.$costHP.'\', cost_hc = \''.$costHC.'\' WHERE hour = \''.$datetime.'\' AND total_consumption <= \''.$totalConsumption.'\'';
+							$sql = 'INSERT INTO sigri_atome_hour (hour, total_consumption, index_hp, index_hc, cost_hp, cost_hc) VALUES (\''.$datetime.'\', \''.$totalConsumption.'\', \''.$indexHP.'\', \''.$indexHC.'\', \''.$costHP.'\', \''.$costHC.'\') ON DUPLICATE KEY UPDATE hour="'.$datetime.'"';
+							//$sql = 'UPDATE sigri_atome_hour SET hour = \''.$datetime.'\', total_consumption = \''.$totalConsumption.'\', index_hp = \''.$indexHP.'\', index_hc = \''.$indexHC.'\', cost_hp = \''.$costHP.'\', cost_hc = \''.$costHC.'\' WHERE hour = \''.$datetime.'\' AND total_consumption <= \''.$totalConsumption.'\'';
                             log::add('sigri_atome', 'debug', 'RQT $sql : ' . $sql);
                             DB::Prepare($sql, array(), DB::FETCH_TYPE_ALL);
 
@@ -349,8 +349,8 @@
 							// Enregistrement du jour dans la BDD
 							log::add('sigri_atome', 'debug', 'Enregistrement dans la BDD en cours du jour : '.$i);
 							//$sql = 'INSERT INTO sigri_atome_day (day, total_consumption, index_hp, index_hc, cost_hp, cost_hc) VALUES (\''.$date.'\', \''.$totalConsumption.'\', \''.$indexHP.'\', \''.$indexHC.'\', \''.$costHP.'\', \''.$costHC.'\') ON DUPLICATE KEY UPDATE total_consumption='.$totalConsumption.', index_hp='.$indexHP.', index_hc='.$indexHC.', cost_hp='.$costHP.', cost_hc='.$costHC;
-							//$sql = 'INSERT INTO sigri_atome_day (day, total_consumption, index_hp, index_hc, cost_hp, cost_hc) VALUES (\''.$date.'\', \''.$totalConsumption.'\', \''.$indexHP.'\', \''.$indexHC.'\', \''.$costHP.'\', \''.$costHC.'\') ON DUPLICATE KEY UPDATE day = "'.$date.'"';
-							$sql = 'UPDATE sigri_atome_day SET day = \''.$date.'\', total_consumption = \''.$totalConsumption.'\', index_hp = \''.$indexHP.'\', index_hc = \''.$indexHC.'\', cost_hp = \''.$costHP.'\', cost_hc = \''.$costHC.'\' WHERE day = \''.$date.'\' AND total_consumption <= \''.$totalConsumption.'\'';
+							$sql = 'INSERT INTO sigri_atome_day (day, total_consumption, index_hp, index_hc, cost_hp, cost_hc) VALUES (\''.$date.'\', \''.$totalConsumption.'\', \''.$indexHP.'\', \''.$indexHC.'\', \''.$costHP.'\', \''.$costHC.'\') ON DUPLICATE KEY UPDATE day = "'.$date.'"';
+							//$sql = 'UPDATE sigri_atome_day SET day = \''.$date.'\', total_consumption = \''.$totalConsumption.'\', index_hp = \''.$indexHP.'\', index_hc = \''.$indexHC.'\', cost_hp = \''.$costHP.'\', cost_hc = \''.$costHC.'\' WHERE day = \''.$date.'\' AND total_consumption <= \''.$totalConsumption.'\'';
 							log::add('sigri_atome', 'debug', $i.' - RQT $sql : ' . $sql);
                             DB::Prepare($sql, array(), DB::FETCH_TYPE_ALL);
 

@@ -311,7 +311,8 @@
 							// Enregistrement de l'heure dans la BDD
 							log::add('sigri_atome', 'debug', 'Enregistrement dans la BDD en cours de l\'heure : '.$i);
 							//$sql = 'INSERT INTO sigri_atome_hour (hour, total_consumption, index_hp, index_hc, cost_hp, cost_hc) VALUES (\''.$datetime.'\', \''.$totalConsumption.'\', \''.$indexHP.'\', \''.$indexHC.'\', \''.$costHP.'\', \''.$costHC.'\') ON DUPLICATE KEY UPDATE total_consumption='.$totalConsumption.', index_hp='.$indexHP.', index_hc='.$indexHC.', cost_hp='.$costHP.', cost_hc='.$costHC;
-							$sql = 'INSERT INTO sigri_atome_hour (hour, total_consumption, index_hp, index_hc, cost_hp, cost_hc) VALUES (\''.$datetime.'\', \''.$totalConsumption.'\', \''.$indexHP.'\', \''.$indexHC.'\', \''.$costHP.'\', \''.$costHC.'\') ON DUPLICATE KEY UPDATE hour="'.$datetime.'"';
+							//$sql = 'INSERT INTO sigri_atome_hour (hour, total_consumption, index_hp, index_hc, cost_hp, cost_hc) VALUES (\''.$datetime.'\', \''.$totalConsumption.'\', \''.$indexHP.'\', \''.$indexHC.'\', \''.$costHP.'\', \''.$costHC.'\') ON DUPLICATE KEY UPDATE hour="'.$datetime.'"';
+							$sql = 'UPDATE sigri_atome_hour SET hour = \''.$datetime.'\', total_consumption = \''.$totalConsumption.'\', index_hp = \''.$indexHP.'\', index_hc = \''.$indexHC.'\', cost_hp = \''.$costHP.'\', cost_hc = \''.$costHC.'\' WHERE hour = \''.$datetime.'\' AND total_consumption <= \''.$totalConsumption.'\'';
                             log::add('sigri_atome', 'debug', 'RQT $sql : ' . $sql);
                             DB::Prepare($sql, array(), DB::FETCH_TYPE_ALL);
 
@@ -348,14 +349,15 @@
 							// Enregistrement du jour dans la BDD
 							log::add('sigri_atome', 'debug', 'Enregistrement dans la BDD en cours du jour : '.$i);
 							//$sql = 'INSERT INTO sigri_atome_day (day, total_consumption, index_hp, index_hc, cost_hp, cost_hc) VALUES (\''.$date.'\', \''.$totalConsumption.'\', \''.$indexHP.'\', \''.$indexHC.'\', \''.$costHP.'\', \''.$costHC.'\') ON DUPLICATE KEY UPDATE total_consumption='.$totalConsumption.', index_hp='.$indexHP.', index_hc='.$indexHC.', cost_hp='.$costHP.', cost_hc='.$costHC;
-							$sql = 'INSERT INTO sigri_atome_day (day, total_consumption, index_hp, index_hc, cost_hp, cost_hc) VALUES (\''.$date.'\', \''.$totalConsumption.'\', \''.$indexHP.'\', \''.$indexHC.'\', \''.$costHP.'\', \''.$costHC.'\') ON DUPLICATE KEY UPDATE day = "'.$date.'"';
-                            log::add('sigri_atome', 'debug', $i.' - RQT $sql : ' . $sql);
+							//$sql = 'INSERT INTO sigri_atome_day (day, total_consumption, index_hp, index_hc, cost_hp, cost_hc) VALUES (\''.$date.'\', \''.$totalConsumption.'\', \''.$indexHP.'\', \''.$indexHC.'\', \''.$costHP.'\', \''.$costHC.'\') ON DUPLICATE KEY UPDATE day = "'.$date.'"';
+							$sql = 'UPDATE sigri_atome_day SET day = \''.$date.'\', total_consumption = \''.$totalConsumption.'\', index_hp = \''.$indexHP.'\', index_hc = \''.$indexHC.'\', cost_hp = \''.$costHP.'\', cost_hc = \''.$costHC.'\' WHERE day = \''.$date.'\' AND total_consumption <= \''.$totalConsumption.'\'';
+							log::add('sigri_atome', 'debug', $i.' - RQT $sql : ' . $sql);
                             DB::Prepare($sql, array(), DB::FETCH_TYPE_ALL);
 
 							// Historisation de la valeur dans Jeedom
 							$cmd = $this->getCmd(null, 'consojour');
 							$totalConsumption = $totalConsumption / 1000;
-							log::add('sigri_atome', 'debug', $i.' - Date : : ' . $date . ' : Indice : ' . $totalConsumption . ' kWh');
+							log::add('sigri_atome', 'debug', $i.' - Date : ' . $date . ' : Indice : ' . $totalConsumption . ' kWh');
 							$cmd->event($totalConsumption, $date);
 						}
 					}
@@ -368,6 +370,7 @@
 			//$this->Save_Atome_Jeedom($period, $response, $start_date);
 		}
 
+		/*
 		public function Save_Atome_Jeedom($period, $response, $start_datetime) {
 			$obj = json_decode($response, true);
 			log::add('sigri_atome', 'debug', $obj);
@@ -388,17 +391,11 @@
 				$date_format = "Y-m-d";
 			}
 
-			foreach ($obj['data'] as &$value) {
-				$jeedom_event_date = $start_date->format($date_format);
-				if ($value['totalConsumption'] == "-1" OR $value['totalConsumption'] == "-2") {
-					log::add('sigri_atome', 'debug', 'Date : ' . $jeedom_event_date . ' : Valeur incorrecte : ' . $value['totalConsumption']);
-				} else {
-					log::add('sigri_atome', 'debug', 'Date : ' . $jeedom_event_date . ' : Indice : ' . $value['totalConsumption'] . ' KWh');
-					$cmd->event($value['totalConsumption'], $jeedom_event_date);
-				}
-				date_add($start_date,date_interval_create_from_date_string($delta));
-			}
+            log::add('sigri_atome', 'debug', 'Date : ' . $jeedom_event_date . ' : Indice : ' . $value['totalConsumption'] . ' KWh');
+            $cmd->event($value['totalConsumption'], $jeedom_event_date);
+            date_add($start_date,date_interval_create_from_date_string($delta));
 		}
+		*/
 
 		public static function CronIsInstall() {
 			log::add('sigri_atome', 'debug', 'Vérification des cron');

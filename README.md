@@ -6,11 +6,12 @@
 - ~~Connection with BDD~~
 - ~~Update day/week/month via crontab~~
 - Add new method to manage cookie
-- Not Update if NewValue < OldValue
+- ~~Not Update if NewValue < OldValue~~
 - Select old period
 - Add month/year command
 - Add Backup/Export DB (SQL)
 - Add Import/Restore DB (SQL)
+- Update form to JD 3.X
 
 ## Versions
 

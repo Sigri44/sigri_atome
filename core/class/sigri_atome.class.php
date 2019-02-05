@@ -311,9 +311,16 @@
 							// Enregistrement de l'heure dans la BDD
 							log::add('sigri_atome', 'debug', 'Enregistrement dans la BDD en cours de l\'heure : '.$i);
 							//$sql = 'INSERT INTO sigri_atome_hour (hour, total_consumption, index_hp, index_hc, cost_hp, cost_hc) VALUES (\''.$datetime.'\', \''.$totalConsumption.'\', \''.$indexHP.'\', \''.$indexHC.'\', \''.$costHP.'\', \''.$costHC.'\') ON DUPLICATE KEY UPDATE total_consumption='.$totalConsumption.', index_hp='.$indexHP.', index_hc='.$indexHC.', cost_hp='.$costHP.', cost_hc='.$costHC;
-							$sql = 'INSERT INTO sigri_atome_hour (hour, total_consumption, index_hp, index_hc, cost_hp, cost_hc) VALUES (\''.$datetime.'\', \''.$totalConsumption.'\', \''.$indexHP.'\', \''.$indexHC.'\', \''.$costHP.'\', \''.$costHC.'\') ON DUPLICATE KEY UPDATE hour="'.$datetime.'"';
-							//$sql = 'UPDATE sigri_atome_hour SET hour = \''.$datetime.'\', total_consumption = \''.$totalConsumption.'\', index_hp = \''.$indexHP.'\', index_hc = \''.$indexHC.'\', cost_hp = \''.$costHP.'\', cost_hc = \''.$costHC.'\' WHERE hour = \''.$datetime.'\' AND total_consumption <= \''.$totalConsumption.'\'';
-                            log::add('sigri_atome', 'debug', 'RQT $sql : ' . $sql);
+							//$sql = 'INSERT INTO sigri_atome_hour (hour, total_consumption, index_hp, index_hc, cost_hp, cost_hc) VALUES (\''.$datetime.'\', \''.$totalConsumption.'\', \''.$indexHP.'\', \''.$indexHC.'\', \''.$costHP.'\', \''.$costHC.'\') ON DUPLICATE KEY UPDATE hour="'.$datetime.'"';
+							$sql = 'INSERT INTO sigri_atome_hour (hour, total_consumption, index_hp, index_hc, cost_hp, cost_hc) VALUES (\''.$datetime.'\', \''.$totalConsumption.'\', \''.$indexHP.'\', \''.$indexHC.'\', \''.$costHP.'\', \''.$costHC.'\') ON DUPLICATE KEY UPDATE 
+							total_consumption = CASE WHEN total_consumption <=\''.$totalConsumption.'\' THEN \''.$totalConsumption.'\' ELSE total_consumption END,
+							index_hp = CASE WHEN index_hp <=\''.$indexHP.'\' THEN \''.$indexHP.'\' ELSE index_hp END,
+							index_hc = CASE WHEN index_hc <=\''.$indexHC.'\' THEN \''.$indexHC.'\' ELSE index_hc END,
+							cost_hp = CASE WHEN cost_hp <=\''.$costHP.'\' THEN \''.$costHP.'\' ELSE cost_hp END,
+							cost_hc = CASE WHEN cost_hc <=\''.$costHC.'\' THEN \''.$costHC.'\' ELSE cost_hc END';
+							
+							
+							log::add('sigri_atome', 'debug', 'RQT $sql : ' . $sql);
                             DB::Prepare($sql, array(), DB::FETCH_TYPE_ALL);
 
                             // Historisation de la valeur dans Jeedom

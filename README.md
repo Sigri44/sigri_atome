@@ -12,6 +12,7 @@
 - Add Backup/Export DB (SQL)
 - Add Import/Restore DB (SQL)
 - Update form to JD 3.X
+- Add option to add event value
 
 ## Versions
 

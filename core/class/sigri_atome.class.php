@@ -173,8 +173,12 @@
 
 			if ($err) {
 				//log::add('sigri_atome', 'error', 'cURL Error n°'.$errno.' : ' . $err);
-				log::add('sigri_atome', 'error', 'cURL Error #:' . $err);
-				die();
+                if ($err == "Operation timed out after 30000 milliseconds with 0 bytes received" || "Connection timed out after 30001 milliseconds") {
+                    log::add('sigri_atome', 'debug', '[Login] Serveur injoignable, timeout dépassé !' . $err);
+                } else {
+                    log::add('sigri_atome', 'error', '[Login] cURL Error #:' . $err);
+                }
+                die();
 			} else {
 				log::add('sigri_atome', 'debug', '$response : ' . $response);
 				// Vérification du JSON retourné, si il contient une erreur
@@ -273,7 +277,7 @@
 			curl_close($curl);
 	
 			if ($err) {
-				log::add('sigri_atome', 'error', 'cURL Error #:' . $err);
+				log::add('sigri_atome', 'error', '[Data] cURL Error #:' . $err);
 			} else {
 				// Enregistrement des datas énergie
 				if ($STORAGE == "JSON") {

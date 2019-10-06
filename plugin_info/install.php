@@ -19,9 +19,10 @@
 	
 	function sigri_atome_install() {
 		log::add('sigri_atome', 'debug', 'Installation du plugin sigri_atome');
-		exec('sudo chmod 775'.dirname(__FILE__).'../ressources/cookies.txt');
-		exec('sudo chmod 775'.dirname(__FILE__).'../ressources/atome_connection.json');
-		exec('sudo chmod 777'.dirname(__FILE__).'/install.sql');
+		exec('sudo chmod 775'.dirname(__FILE__).'../resources/cookies.txt');
+		exec('sudo chmod 775'.dirname(__FILE__).'../resources/atome_connection.json');
+        exec('sudo chown www-data:www-data -R '.dirname(__FILE__).'../resources/');
+        exec('sudo chmod 777'.dirname(__FILE__).'/install.sql');
 		$sql = file_get_contents(dirname(__FILE__).'/install.sql');
 		DB::Prepare($sql, array(), DB::FETCH_TYPE_ROW);
 		sigri_atome::CronIsInstall();
@@ -63,22 +64,44 @@
 		}
 
 		// Suppression de la Database uniquement si la case est cochée
-		log::add('sigri_atome', 'debug', '$eqLogic->getConfiguration(\'isDrop\') : ' . $eqLogic->getConfiguration('isDrop'));
-		log::add('sigri_atome', 'debug', '$eqLogic->getConfiguration(\'saveIntoDatabase\') : ' . $eqLogic->getConfiguration('saveIntoDatabase'));
-		log::add('sigri_atome', 'debug', '$eqLogic->getConfiguration(\'saveIntoJson\') : ' . $eqLogic->getConfiguration('saveIntoJson'));
-		if ($eqLogic->getConfiguration('isDrop')) {
-			log::add('sigri_atome', 'debug', 'Valeur isDrop : ' . $sigri_atome->getConfiguration('isDrop'));
-			log::add('sigri_atome', 'debug', 'Valeur isDrop : ' . $sigri_atome->getIsDrop);
-		} else {
-			log::add('sigri_atome', 'debug', 'Valeur isDrop : ' . $eqLogic->getConfiguration('isDrop'));
-			log::add('sigri_atome', 'debug', 'Valeur isDrop : ' . $sigri_atome->getIsDrop);
-		}
-		/*
-		$sql = "DROP TABLE IF EXISTS `sigri_atome_hour`;";
-		DB::Prepare($sql, array(), DB::FETCH_TYPE_ROW);
+        /*
+        log::add('sigri_atome', 'debug', '*** Désinstallation : Partie 1 ***');
 
-		$sql = "DROP TABLE IF EXISTS `sigri_atome_day`;";
-		DB::Prepare($sql, array(), DB::FETCH_TYPE_ROW);
-		*/
+        $eqLogics = eqLogic::byType('sigri_atome');
+        log::add('sigri_atome', 'debug', '$eqLogics : ' . var_dump($eqLogics));
+        //if (!empty($eqLogics)) {
+        foreach ($eqLogics as $eqLogic) {
+            log::add('sigri_atome', 'debug', '$eqLogic : ' . var_dump($eqLogic));
+        }
+
+        foreach (eqLogic::byType('sigri_atome') as $sigriatome) {
+            log::add('sigri_atome', 'debug', '$sigriatome : '.var_dump($sigriatome));
+            if (!empty($sigriatome->getConfiguration('isDrop')) && !empty($sigriatome->getConfiguration('saveIntoDatabase')) && !empty($sigriatome->getConfiguration('saveIntoJson'))) {
+                if ($sigriatome->getConfiguration('isDrop')) {
+                    log::add('sigri_atome', 'debug', '$eqLogic->getConfiguration(\'isDrop\') : ' . $sigriatome->getConfiguration('isDrop'));
+                }
+                if ($sigriatome->getConfiguration('saveIntoDatabase')) {
+                    log::add('sigri_atome', 'debug', '$eqLogic->getConfiguration(\'saveIntoDatabase\') : ' . $sigriatome->getConfiguration('saveIntoDatabase'));
+                }
+                if ($sigriatome->getConfiguration('saveIntoJson')) {
+                    log::add('sigri_atome', 'debug', '$eqLogic->getConfiguration(\'saveIntoJson\') : ' . $sigriatome->getConfiguration('saveIntoJson'));
+                }
+            } else {
+                log::add('sigri_atome', 'debug', 'Tous les champs de configuration sont vides.');
+            }
+            log::add('sigri_atome', 'debug', 'Valeur isDrop : ' . $sigriatome->getIsDrop);
+            log::add('sigri_atome', 'debug', 'Valeur saveIntoDatabase : ' . $sigriatome->getIsDrop);
+            log::add('sigri_atome', 'debug', 'Valeur saveIntoJson : ' . $sigriatome->getIsDrop);
+        }
+
+		log::add('sigri_atome', 'debug', '*** Désinstallation : Partie 2 ***');
+        */
+        /*
+        $sql = "DROP TABLE IF EXISTS `sigri_atome_hour`;";
+        DB::Prepare($sql, array(), DB::FETCH_TYPE_ROW);
+
+        $sql = "DROP TABLE IF EXISTS `sigri_atome_day`;";
+        DB::Prepare($sql, array(), DB::FETCH_TYPE_ROW);
+        */
 	}
 ?>

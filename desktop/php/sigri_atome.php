@@ -89,6 +89,12 @@
 					</div>
 				</div>
 				<!-- Configuration avancée -->
+                <div class="form-group">
+                    <label class="col-sm-3 control-label">{{New API Total Energie ?}}</label>
+                    <div class="col-sm-3">
+                        <label class="checkbox-inline"><input type="checkbox" class="eqLogicAttr" data-label-text="{{NewAPi}}" data-l1key="newApi" checked />Oui</label>
+                    </div>
+                </div>
 				<div class="form-group">
 					<label class="col-sm-3 control-label">{{Vider les tables SQL à la désinstallation ?}}</label>
 					<div class="col-sm-3">

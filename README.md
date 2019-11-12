@@ -5,13 +5,13 @@
 - ~~Update module Jeedom/NextDom compatibility~~
 - ~~Connection with BDD~~
 - ~~Update day/week/month via crontab~~
-- Add new method to manage cookie
+- ~~Add new method to manage cookie~~
 - ~~Not Update if NewValue < OldValue~~
 - Select old period
-- Add month/year command
+- ~~Add month/year command~
 - Add Backup/Export DB (SQL)
 - Add Import/Restore DB (SQL)
-- Update form to JD 3.X
+- ~~Update form to JD 3.X~~
 - Add option to add event value
 
 ## Versions

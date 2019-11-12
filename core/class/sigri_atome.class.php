@@ -16,21 +16,26 @@
 	*/
 	
 	/* * ***************************Includes********************************* */
-	require_once __DIR__ . '/../../../../core/php/core.inc.php';
+	require_once __DIR__ . "/../../../../core/php/core.inc.php";
 
 	class sigri_atome extends eqLogic {
 		// *****************
 		// * Configuration *
 		// *****************
-		const URL_API = "https://esoftlink.esoftthings.com";
-		const API_LOGIN = "/api/user/login.json";
-		const API_DATA = "/graph-query-last-consumption";
-		const URL_LOGIN = self::URL_API . self::API_LOGIN;
-		const RESOURCES_DIR = __DIR__.'/../../resources/';
-		const JSON_CONNECTION = self::RESOURCES_DIR.'atome_connection.json';
-		const COOKIES_FILE = self::RESOURCES_DIR.'cookies.txt';
+		const URL_API = "https://esoftlink.esoftthings.com/api";
+		const API_LOGIN = "/user/login.json";
+        const URL_LOGIN = self::URL_API . self::API_LOGIN;
 
-		public function preUpdate() {
+        const API_DATA = "/graph-query-last-consumption";
+        const API_COMMON = "/subscription/";
+        const API_CONSUMPTION = "/consumption.json?period=sod";
+        const API_CURRENT_MEASURE = "/measure/live.json?mobileId=247DA355-FB45-4258-86A2-FE964DF2B1F6";
+
+		const RESOURCES_DIR = __DIR__."/../../resources/";
+		const JSON_CONNECTION = self::RESOURCES_DIR."atome_connection.json";
+		const COOKIES_FILE = self::RESOURCES_DIR."cookies.txt";
+
+        public function preUpdate() {
 
 		}
 		
@@ -78,52 +83,29 @@
 			
 		}
 
+        // New Beta cronMinute
+        public static function cronMinute() {
+            log::add("sigri_atome", "debug", "********** Etape 0 - Lancement du cronMinute **********");
+            $period = "day";
+            $this->baseSqueleton($period);
+        }
+
 		public static function cronHoraire() {
 			log::add('sigri_atome', 'debug', '********** Etape 0 - Lancement du cronHoraire **********');
-			$eqLogics = eqLogic::byType('sigri_atome');
-            foreach ($eqLogics as $eqLogic) {
-                if ($eqLogic->getIsEnable() == 1) {
-                    if (($eqLogic->getConfiguration('newApi')) === true) {
-                        log::add('sigri_atome', 'debug', 'newApi : ' . $eqLogic->getConfiguration('newApi'));
-                        if (!empty($eqLogic->getConfiguration('identifiant')) && !empty($eqLogic->getConfiguration('password'))) {
-                            log::add('sigri_atome', 'debug', 'Debug avant login');
-                            log::add('sigri_atome', 'debug', 'Login : ' . $eqLogic->getConfiguration('identifiant'));
-                            log::add('sigri_atome', 'debug', 'Password : ' . $eqLogic->getConfiguration('password'));
-                            $json_connection = $eqLogic->Call_Atome_Login($eqLogic->getConfiguration('identifiant'), $eqLogic->getConfiguration('password'));
-                            $period = "day";
-                            $eqLogic->Call_Atome_API($json_connection, $period);
-                        }
-                    } else {
-                        log::add('sigri_atome', 'error', 'La nouvelle API Total ne fonctionne pas encore (route invalide) !');
-                    }
-                } else {
-                    log::add('sigri_atome', 'error', 'Aucun équipement n\'est configuré/activé !');
-                }
-            }
+            $period = "day";
+            $this->baseSqueleton($period);
 		}
 
 		public static function cronJournalier() {
-			log::add('sigri_atome', 'debug', '********** Etape 0 - Lancement du cronJournalier **********');
-			$eqLogics = eqLogic::byType('sigri_atome');
-			foreach ($eqLogics as $eqLogic) {
-				if ($eqLogic->getIsEnable() == 1) {
-					if (!empty($eqLogic->getConfiguration('identifiant')) && !empty($eqLogic->getConfiguration('password'))) {
-						log::add('sigri_atome', 'debug', 'Debug avant login');
-						log::add('sigri_atome', 'debug', 'Login : '.$eqLogic->getConfiguration('identifiant'));
-						log::add('sigri_atome', 'debug', 'Password : '.$eqLogic->getConfiguration('password'));
-						$json_connection = $eqLogic->Call_Atome_Login($eqLogic->getConfiguration('identifiant'), $eqLogic->getConfiguration('password'));
-						$period = "month";
-						$eqLogic->Call_Atome_API($json_connection, $period);
-					}
-				}
-			}
+            log::add('sigri_atome', 'debug', '********** Etape 0 - Lancement du cronHoraire **********');
+            $period = "month";
+            $this->baseSqueleton($period);
 		}
 
-		public function Call_Atome_Login($login, $password) {
+		public function callAtomeLogin($login, $password) {
 			// Debug complet de la fonction
 			log::add('sigri_atome', 'debug', '********** Etape 1 - Authentification à l\'API **********');
-			/*
-			log::add('sigri_atome', 'debug', '********** -- Call_Atome_Login -- **********');
+			log::add('sigri_atome', 'debug', '********** -- callAtomeLogin -- **********');
 			log::add('sigri_atome', 'debug', '$URL_API : '.self::URL_API);
 			log::add('sigri_atome', 'debug', '$API_LOGIN : '.self::API_LOGIN);
 			log::add('sigri_atome', 'debug', '$API_DATA : '.self::API_DATA);
@@ -133,98 +115,63 @@
 			log::add('sigri_atome', 'debug', '$JSON_CONNECTION : '.self::JSON_CONNECTION);
 			log::add('sigri_atome', 'debug', '$login : '.$login);
 			log::add('sigri_atome', 'debug', '$password : '.$password);
-			log::add('sigri_atome', 'debug', '** 1.X - FinConfig **');
-			*/
 
 			// *******************************
 			// * Etape 1 - Connexion à l'API *
 			// *******************************
 			log::add('sigri_atome', 'debug', '** 1.0 - Authentification sur Atome **');
 
-			$curl = curl_init();
+            $response = $this->execCurlLoginCommand($login, $password);
 
-			curl_setopt_array($curl, array(
-				CURLOPT_COOKIEFILE => self::COOKIES_FILE,
-				CURLOPT_COOKIEJAR => self::COOKIES_FILE,
-				CURLOPT_COOKIESESSION => true,
-				CURLOPT_CUSTOMREQUEST => "POST",
-				CURLOPT_ENCODING => "",
-				CURLOPT_HTTPHEADER => array(
-					"Cache-Control: no-cache",
-					"Content-Type: application/json"
-				),
-				CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-				CURLOPT_MAXREDIRS => 10,
-				CURLOPT_POSTFIELDS => "{\"email\": \"".$login."\",\"plainPassword\": \"".$password."\"}",
-				CURLOPT_RETURNTRANSFER => true,
-				CURLOPT_TIMEOUT => 30,
-				CURLOPT_URL => self::URL_LOGIN,
-			));
-	
-			$response = curl_exec($curl);
+            log::add('sigri_atome', 'debug', '$response : ' . $response);
 
-			// Enregistrement de la connexion au format JSON
-            log::add('sigri_atome', 'debug', '** 1.1 - Enregistrement de la connexion au format JSON **');
+            // Vérification de l'intégrité du JSON
+            $checkJsonIntegrity = json_decode($response);
 
-            // Test de l'écriture sur les fichiers du dossier resources.
-            $is_writableD = is_writable(self::RESOURCES_DIR);
-            $is_writableF = is_writable(self::JSON_CONNECTION);
-            if (false === $is_writableD) {
-                log::add('sigri_atome', 'error', 'Le dossier '.self::RESOURCES_DIR.' n\'est pas accessible en écriture !');
-                die();
-            } else {
-                if (false === $is_writableF) {
-                    log::add('sigri_atome', 'error', 'Le fichier '.self::JSON_CONNECTION.' n\'est pas accessible en écriture !');
+            if ($checkJsonIntegrity->errors) {
+                log::add('sigri_atome', 'debug', '$response->errors[0] : ' . $checkJsonIntegrity->errors[0]);
+                if ($checkJsonIntegrity->errors[0] == "Login Failed") {
+                    log::add('sigri_atome', 'error', '"Login Failed" à la connexion API, réessayez plus tard...');
                     die();
                 } else {
-                    $fpc = file_put_contents(self::JSON_CONNECTION, $response);
-
-                    if ($fpc === false) {
-                        log::add('sigri_atome', 'error', 'Impossible d\'écrire dans : ' . self::JSON_CONNECTION);
-                        log::add('sigri_atome', 'error', 'Les droits doivent être en www-data:www-data (774) pour le dossier resources');
-                        die();
-                    }
+                    log::add('sigri_atome', 'error', 'Erreur à la connexion API : ' . $response);
+                    die();
                 }
             }
 
-			// Récupération des erreurs curl
-			$err = curl_error($curl);
-			$errno = curl_errno($curl);
-			curl_close($curl);
-
-			if ($err) {
-				//log::add('sigri_atome', 'error', 'cURL Error n°'.$errno.' : ' . $err);
-				log::add('sigri_atome', 'error', 'cURL Error #:' . $err);
-				die();
-			} else {
-				log::add('sigri_atome', 'debug', '$response : ' . $response);
-                // Vérification du JSON retourné, si il contient une erreur
-				$json_error = json_decode($response);
-
-                if ($json_error->errors) {
-                    log::add('sigri_atome', 'debug', '$response->errors[0] : ' . $json_error->errors[0]);
-                    if ($json_error->errors[0] == "Login Failed") {
-                        log::add('sigri_atome', 'error', '"Login Failed" à la connexion API, réessayez plus tard...');
-                        die();
-                    } else {
-                        log::add('sigri_atome', 'error', 'Erreur à la connexion API : ' . $response);
-                        die();
-                    }
-                }
-
-				log::add('sigri_atome', 'debug', '** 1.2 - Connexion réussie, récupération des informations en cours ... **');
-			}
+            // Enregistrement de la connexion au format JSON
+            log::add('sigri_atome', 'debug', '** 1.1 - Enregistrement de la connexion au format JSON **');
+            // Test de l'écriture sur les fichiers du dossier resources.
+            $this->checkWriteRights($response);
 
 			if (!self::COOKIES_FILE) {
 				log::add('sigri_atome', 'error', 'Aucun fichier cookies n\'as pu être enregistré !');
 			}
 
-			return $response;
+            log::add('sigri_atome', 'debug', '** 1.2 - Connexion réussie, récupération des informations en cours ... **');
+
+            return $response;
 		}
 
-		public function Call_Atome_API($response, $period) {
+        public function retrieveUserDetails($jsonResponse) {
+            log::add("sigri_atome", "debug", "********** Récupération des infos utilisateurs **********");
+            if ( empty($jsonResponse->subscriptions) ) {
+                log::add("sigri_atome", "error", "No information found from user");
+                die();
+            }
+            $userDetails["id"] = $jsonResponse->id;
+            $userDetails["reference"] = $jsonResponse->subscriptions[0]->reference;
+
+            return $userDetails;
+        }
+
+		public function callAtomeAPI($jsonResponse, $period) {
 			// Debug complet de la fonction
 			log::add('sigri_atome', 'debug', '********** Etape 2 - Récupération des datas énergie **********');
+
+            // Extraction des infos utilisateurs
+            log::add("sigri_atome", "debug", "callAtomeAPI :: Retrieve user details");
+            $userDetails = $this->retrieveUserDetails($jsonResponse);
 
 			// Configuration
 			$STORAGE = "BDD"; // JSON ou BDD
@@ -234,37 +181,40 @@
 			$NOW = date("Hi");
 			$start_date = date("Y-m-d H:i:s");
 
-			/*
-			if ($period == "day") {
-				$end_datetime = $TODAY - 24H;
-			} elseif ($period == "month") {
-				$end_datetime = $TODAY - 31J;
-			} else {
-				log::add('sigri_atome', 'error', 'Datetime : Aucun mode d\'enregistrement n\'as été choisi !');
-			}
-			$start_date = $TODAY->format('d/m/Y');
-			$end_date = $end_datetime->format('d/m/Y');
-			*/
+            // Configuration de la période à récupérer
+            log::add("sigri_atome", "debug", "callAtomeAPI :: Generate url to call");
+            $urlApi = self::URL_API . self::API_COMMON . $userDetails["id"] . "/" . $userDetails["reference"] . self::API_CONSUMPTION;
 
-			// Configuration JSON
+            // ********************************************
+            // * Etape 2 - Récupération des datas énergie *
+            // ********************************************
+            log::add("sigri_atome", "debug", "callAtomeAPI :: call API : ".$urlApi);
+            $jsonResponse = json_decode($this->execCurlCommand($urlApi));
+
+            // Get datas
+            $consoTime = $jsonResponse->time;
+            $consoTotal = $jsonResponse->total;
+            $consoPrice = $jsonResponse->price;
+            $consoStart = $jsonResponse->startPeriod;
+            $consoEnd = $jsonResponse->endPeriod;
+            $consoImpactCO2 = $jsonResponse->impactCo2;
+            log::add("sigri_atome", "info", "callAtomeAPI :: consoTime=".$consoTime.", consoTotal=".$consoTotal.", consoPrice=".$consoPrice.", consoStart".$consoStart.", consoEnd".$consoEnd.", consoImpactCO2".$consoImpactCO2);
+
+            // DONE MTB
+
+            // Configuration JSON
 			$timestamp = date_timestamp_get(date_create($TODAY . $NOW)) + 3600;
     		$DAY_EXPORT = date("d_m_Y_H_i", $timestamp);
 			$JSON_EXPORT_FILENAME = "export_".$period."_".$DAY_EXPORT.".json";  // Nom du fichier JSON à utiliser lors d'un export "API"
 			$JSON_EXPORT_FILE = self::RESOURCES_DIR.$JSON_EXPORT_FILENAME;
 
-
-			// Extraction des infos utilisateurs
-			$json_login = json_decode($response);
-			$user_id = $json_login->id;
-			$user_reference = $json_login->subscriptions[0]->reference;
-
 			// Configuration de la période à récupérer
 			log::add('sigri_atome', 'debug', '** 2.1 - Configuration de la période à récupérer **');
 			if ($period != null) {
-				$URL_DATA = self::URL_API . "/" . $user_id . "/" . $user_reference . self::API_DATA . "?period=" . $period;
+				$URL_DATA = self::URL_API . "/" . $userDetails["id"] . "/" . $userDetails["reference"] . self::API_DATA . "?period=" . $period;
 				log::add('sigri_atome', 'debug', '$URL_DATA : '.$URL_DATA);
 			} else {
-				$URL_DATA = self::URL_API . "/" . $user_id . "/" . $user_reference . self::API_DATA;
+				$URL_DATA = self::URL_API . "/" . $userDetails["id"] . "/" . $userDetails["reference"] . self::API_DATA;
 				log::add('sigri_atome', 'debug', '$URL_DATA : '.$URL_DATA);
 			}
 
@@ -567,53 +517,121 @@
 		}
 		*/
 
+        /* INSTALLATION DES CRONS */
 		public static function CronIsInstall() {
 			log::add('sigri_atome', 'debug', 'Vérification des cron');
-
-			/*
-			$cron = cron::byClassAndFunction('sigri_atome', 'launch_sigri_atome');
-			if (!is_object($cron)) {
-				log::add('sigri_atome', 'debug', 'Cron launch_sigri_atome inexistant, il faut le créer');
-				$cron = new cron();
-				$cron->setClass('sigri_atome');
-				$cron->setFunction('launch_sigri_atome');
-				$cron->setEnable(1);
-				$cron->setDeamon(0);
-				$cron->setSchedule("0 * * * *");
-				$cron->save();
-			} else {
-				log::add('sigri_atome', 'debug', 'Cron launch_sigri_atome existe déjà');
-			}
-			*/
-
-			$cron = cron::byClassAndFunction('sigri_atome', 'cronHoraire');
-			if (!is_object($cron)) {
-				log::add('sigri_atome', 'debug', 'Cron cronHoraire inexistant, il faut le créer');
-				$cron = new cron();
-				$cron->setClass('sigri_atome');
-				$cron->setFunction('cronHoraire');
-				$cron->setEnable(1);
-				$cron->setDeamon(0);
-				$cron->setSchedule("59 * * * *");
-				$cron->save();
-			} else {
-				log::add('sigri_atome', 'debug', 'Cron cronHoraire existe déjà');
-			}
-
-			$cron = cron::byClassAndFunction('sigri_atome', 'cronJournalier');
-			if (!is_object($cron)) {
-				log::add('sigri_atome', 'debug', 'Cron cronJournalier inexistant, il faut le créer');
-				$cron = new cron();
-				$cron->setClass('sigri_atome');
-				$cron->setFunction('cronJournalier');
-				$cron->setEnable(1);
-				$cron->setDeamon(0);
-				$cron->setSchedule("59 23 * * *");
-				$cron->save();
-			} else {
-				log::add('sigri_atome', 'debug', 'Cron cronJournalier existe déjà');
-			}
+            $this->checkCronAndCreateIfNecessary("cronMinute", "* * * * *");
+            $this->checkCronAndCreateIfNecessary("cronHoraire", "59 * * * *");
+            $this->checkCronAndCreateIfNecessary("cronJournalier", "59 23 * * *");
 		}
+
+
+        /*****************
+         * PRIVATE METHODS
+         *****************/
+
+        private function checkCronAndCreateIfNecessary($cronName, $cronSchedule) {
+            $cron = cron::byClassAndFunction("sigri_atome", $cronName);
+            if (!is_object($cron)) {
+                log::add("sigri_atome", "debug", "Cron ".$cronName." inexistant, il faut le créer");
+                $cron = new cron();
+                $cron->setClass("sigri_atome");
+                $cron->setFunction($cronName);
+                $cron->setEnable(1);
+                $cron->setDeamon(0);
+                $cron->setSchedule($cronSchedule);
+                $cron->save();
+            } else {
+                log::add("sigri_atome", "debug", "Cron ".$cronName." existe déjà");
+            }
+        }
+
+        private function execCurlLoginCommand($login, $password) {
+            $curl = curl_init();
+            curl_setopt_array($curl, array(
+                CURLOPT_COOKIEFILE => self::COOKIES_FILE,
+                CURLOPT_COOKIEJAR => self::COOKIES_FILE,
+                CURLOPT_COOKIESESSION => true,
+                CURLOPT_CUSTOMREQUEST => "POST",
+                CURLOPT_ENCODING => "",
+                CURLOPT_HTTPHEADER => array(
+                    "Cache-Control: no-cache",
+                    "Content-Type: application/json"
+                ),
+                CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+                CURLOPT_MAXREDIRS => 10,
+                CURLOPT_POSTFIELDS => "{\"email\": \"".$login."\",\"plainPassword\": \"".$password."\"}",
+                CURLOPT_RETURNTRANSFER => true,
+                CURLOPT_TIMEOUT => 30,
+                CURLOPT_URL => self::URL_LOGIN
+            ));
+
+            $response = curl_exec($curl);
+            $curlError = curl_error($curl);
+            curl_close($curl);
+            if ($curlError) {
+                log::add("sigri_atome", "error", "execCurlLoginCommand :: cURL Error #:".$curlError);
+                die();
+            }
+            return $response;
+        }
+
+        private function execCurlCommand($url) {
+            $curl = curl_init();
+            curl_setopt_array($curl, array(
+                CURLOPT_COOKIEFILE => self::COOKIES_FILE,
+                CURLOPT_COOKIEJAR => self::COOKIES_FILE,
+                CURLOPT_COOKIESESSION => true,
+                CURLOPT_CUSTOMREQUEST => "GET",
+                CURLOPT_ENCODING => "",
+                CURLOPT_HTTPHEADER => array(
+                    "Cache-Control: no-cache",
+                    "Content-Type: application/json",
+                ),
+                CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+                CURLOPT_MAXREDIRS => 10,
+                CURLOPT_RETURNTRANSFER => true,
+                CURLOPT_TIMEOUT => 30,
+                CURLOPT_URL => $url
+            ));
+            $response = curl_exec($curl);
+            $curlError = curl_error($curl);
+            curl_close($curl);
+            if ($curlError) {
+                log::add("sigri_atome", "error", "execCurlCommand :: cURL Error #:".$curlError);
+                die();
+            }
+            return $response;
+        }
+
+        private function checkWriteRights($response) {
+            if (false === is_writable(self::RESOURCES_DIR)) {
+                log::add("sigri_atome", "error", "Le dossier ".self::RESOURCES_DIR." n\"est pas accessible en écriture !");
+                die();
+            }
+            if (false === is_writable(self::JSON_CONNECTION)) {
+                log::add("sigri_atome", "error", "Le fichier ".self::JSON_CONNECTION." n\"est pas accessible en écriture !");
+                die();
+            }
+            if (file_put_contents(self::JSON_CONNECTION, $response) === false) {
+                log::add("sigri_atome", "error", "Impossible d\"écrire dans : ".self::JSON_CONNECTION.". Les droits doivent être en www-data:www-data (774) pour le dossier resources");
+                die();
+            }
+        }
+
+        private function baseSkeleton($period) {
+            $eqLogics = eqLogic::byType('sigri_atome');
+            foreach ($eqLogics as $eqLogic) {
+                if ($eqLogic->getIsEnable() != 1) {
+                    log::add("sigri_atome", "error", "Aucun équipement n'est configuré/activé !");
+                    die();
+                }
+                if (!empty($eqLogic->getConfiguration("identifiant")) && !empty($eqLogic->getConfiguration("password"))) {
+                    $jsonResponse = $eqLogic->callAtomeLogin($eqLogic->getConfiguration("identifiant"), $eqLogic->getConfiguration("password"));
+                    $eqLogic->callAtomeAPI($jsonResponse, $period);
+                }
+            }
+        }
 	}
 
 	class sigri_atomeCmd extends cmd {

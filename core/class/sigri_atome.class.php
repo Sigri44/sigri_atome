@@ -84,25 +84,27 @@
 		}
 
         // New Beta cronMinute
-        public static function cronMinute() {
+        /*
+        public function cronMinute() {
             log::add("sigri_atome", "debug", "********** Etape 0 - Lancement du cronMinute **********");
             $period = "day";
             $this->baseSqueleton($period);
         }
+        */
 
-		public static function cronHoraire() {
+		public function cronHoraire() {
 			log::add('sigri_atome', 'debug', '********** Etape 0 - Lancement du cronHoraire **********');
             $period = "day";
             $this->baseSqueleton($period);
 		}
 
-		public static function cronJournalier() {
+		public function cronJournalier() {
             log::add('sigri_atome', 'debug', '********** Etape 0 - Lancement du cronHoraire **********');
             $period = "month";
             $this->baseSqueleton($period);
 		}
 
-		public function callAtomeLogin($login, $password) {
+		private function callAtomeLogin($login, $password) {
 			// Debug complet de la fonction
 			log::add('sigri_atome', 'debug', '********** Etape 1 - Authentification à l\'API **********');
 			log::add('sigri_atome', 'debug', '********** -- callAtomeLogin -- **********');
@@ -153,7 +155,7 @@
             return $response;
 		}
 
-        public function retrieveUserDetails($jsonResponse) {
+        private function retrieveUserDetails($jsonResponse) {
             log::add("sigri_atome", "debug", "********** Récupération des infos utilisateurs **********");
             if ( empty($jsonResponse->subscriptions) ) {
                 log::add("sigri_atome", "error", "No information found from user");
@@ -165,7 +167,7 @@
             return $userDetails;
         }
 
-		public function callAtomeAPI($jsonResponse, $period) {
+		private function callAtomeAPI($jsonResponse, $period) {
 			// Debug complet de la fonction
 			log::add('sigri_atome', 'debug', '********** Etape 2 - Récupération des datas énergie **********');
 
@@ -350,8 +352,6 @@
                                     log::add('sigri_atome', 'error', '$code2 n\'est pas un code valide : ' . $code2);
                                 }
                             }
-
-
 							*/
 
 
@@ -370,7 +370,6 @@
 							*/
 
 							/*
-
 							// Enregistrement de l'heure dans la BDD
 							log::add('sigri_atome', 'debug', 'Enregistrement dans la BDD en cours de l\'heure : '.$i);
 							//$sql = 'INSERT INTO sigri_atome_hour (hour, total_consumption, index_hp, index_hc, cost_hp, cost_hc) VALUES (\''.$datetime.'\', \''.$totalConsumption.'\', \''.$indexHP.'\', \''.$indexHC.'\', \''.$costHP.'\', \''.$costHC.'\') ON DUPLICATE KEY UPDATE total_consumption='.$totalConsumption.', index_hp='.$indexHP.', index_hc='.$indexHC.', cost_hp='.$costHP.', cost_hc='.$costHC;
@@ -386,7 +385,6 @@
                             log::add('sigri_atome', 'debug', '**************** FIN ***************');
 
                             $cmd->event($totalConsumption, $datetime);
-
 							*/
 						}
 					} elseif ($period == "month") {
@@ -446,7 +444,7 @@
 			//$this->Save_Atome_Jeedom($period, $response, $start_date);
 		}
 
-        public function insertIndex($i, $json_data, $datetime, $totalConsumption) {
+        private function insertIndex($i, $json_data, $datetime, $totalConsumption) {
             $i = $i + 1;
             $code = "$json_data->data[$i]->consumption->code".$i;
             $index = $json_data->data[$i]->consumption->index.$i;
@@ -490,41 +488,13 @@
             $cmd->event($totalConsumption, $datetime);
         }
 
-		/*
-		public function Save_Atome_Jeedom($period, $response, $start_datetime) {
-			$obj = json_decode($response, true);
-			log::add('sigri_atome', 'debug', $obj);
-			log::add('sigri_atome', 'debug', var_dump($obj));
-
-			if ($period == "day") {
-				log::add('sigri_atome', 'debug', 'Traitement des données horaires');
-				$cmd = $this->getCmd(null, 'consoheure');
-				$delta = "1 hour";
-				$start_date = $start_datetime;
-				$date_format = "Y-m-d H:00:00";
-			} elseif ($period == "month") {
-				log::add('sigri_atome', 'debug', 'Traitement des données journalières');
-				$cmd = $this->getCmd(null, 'consojour');
-				$delta = "1 day";
-				$start_date = $obj['data']['time'];
-				$start_date = date_create_from_format('Y-m-d', $start_date);
-				$date_format = "Y-m-d";
-			}
-
-            log::add('sigri_atome', 'debug', 'Date : ' . $jeedom_event_date . ' : Indice : ' . $value['totalConsumption'] . ' KWh');
-            $cmd->event($value['totalConsumption'], $jeedom_event_date);
-            date_add($start_date,date_interval_create_from_date_string($delta));
-		}
-		*/
-
         /* INSTALLATION DES CRONS */
-		public static function CronIsInstall() {
+		public function CronIsInstall() {
 			log::add('sigri_atome', 'debug', 'Vérification des cron');
-            $this->checkCronAndCreateIfNecessary("cronMinute", "* * * * *");
+            //$this->checkCronAndCreateIfNecessary("cronMinute", "* * * * *");
             $this->checkCronAndCreateIfNecessary("cronHoraire", "59 * * * *");
             $this->checkCronAndCreateIfNecessary("cronJournalier", "59 23 * * *");
 		}
-
 
         /*****************
          * PRIVATE METHODS

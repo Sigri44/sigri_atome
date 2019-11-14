@@ -95,13 +95,13 @@
 		public function cronHoraire() {
 			log::add('sigri_atome', 'debug', '********** Etape 0 - Lancement du cronHoraire **********');
             $period = "day";
-            $this->baseSkeleton($period);
+            self::baseSkeleton($period);
 		}
 
 		public function cronJournalier() {
             log::add('sigri_atome', 'debug', '********** Etape 0 - Lancement du cronHoraire **********');
             $period = "month";
-            $this->baseSkeleton($period);
+            self::baseSkeleton($period);
 		}
 
 		private function callAtomeLogin($login, $password) {
@@ -151,8 +151,8 @@
 			}
 
             log::add('sigri_atome', 'debug', '** 1.2 - Connexion réussie, récupération des informations en cours ... **');
-
-            return $response;
+            $jsonResponse = json_decode($response);
+            return $jsonResponse;
 		}
 
         private function retrieveUserDetails($jsonResponse) {

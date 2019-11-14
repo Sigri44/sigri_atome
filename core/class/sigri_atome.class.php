@@ -446,7 +446,7 @@
 
         private function insertIndex($i, $json_data, $datetime, $totalConsumption) {
             $i = $i + 1;
-            $code = "$json_data->data[$i]->consumption->code".$i;
+            $code = $json_data->data[$i]->consumption->code.$i;
             $index = $json_data->data[$i]->consumption->index.$i;
             $cost = $json_data->data[$i]->consumption->bill.$i;
 

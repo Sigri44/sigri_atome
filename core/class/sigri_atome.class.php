@@ -148,13 +148,11 @@
 
 			if (!self::COOKIES_FILE) {
 				log::add('sigri_atome', 'error', 'Aucun fichier cookies n\'as pu être enregistré !');
-			}
+                die();
+            }
 
             log::add('sigri_atome', 'debug', '** 1.2 - Connexion réussie, récupération des informations en cours ... **');
             $jsonResponse = json_decode($response);
-            if (strpos($jsonResponse, "No route found for")) {
-                log::add('sigri_atome', 'error', 'La route API n\'est pas correcte : ' . $jsonResponse);
-            }
             return $jsonResponse;
 		}
 
@@ -251,12 +249,17 @@
 
 			curl_close($curl);
 
-            log::add('sigri_atome', 'debug', '$response : ' . $response);
-
-            if ($err) {
+			// Gestion des erreurs
+            if (strpos($response, "No route found for")) {
+                log::add('sigri_atome', 'error', 'La route API n\'est pas correcte : ' . $response);
+                die();
+            } elseif ($err) {
 				log::add('sigri_atome', 'error', 'cURL Error #:' . $err);
-			} else {
-				// Enregistrement des datas énergie
+                die();
+            } else {
+                log::add('sigri_atome', 'debug', '$response : ' . $response);
+
+                // Enregistrement des datas énergie
 				if ($STORAGE == "JSON") {
 					log::add('sigri_atome', 'debug', '** 2.3a - Enregistrement des datas énergie au format JSON **');
 					file_put_contents($JSON_EXPORT_FILE, $response);
@@ -353,6 +356,7 @@
                                     return array("indexHSC" => $index, "costSHC" => $bill);
                                 } else {
                                     log::add('sigri_atome', 'error', '$code2 n\'est pas un code valide : ' . $code2);
+							        die();
                                 }
                             }
 							*/
@@ -440,7 +444,8 @@
 					}
 				} else {
 					log::add('sigri_atome', 'error', '** 2.3 - Aucun mode d\'enregistrement n\'as été choisi ! **');
-				}
+                    die();
+                }
 			}
 			log::add('sigri_atome', 'debug', '********** Etape 3 - Fin du Cron, tout s\'est bien déroulé ! **********');
 			// Enregistrement des values dans Jeedom

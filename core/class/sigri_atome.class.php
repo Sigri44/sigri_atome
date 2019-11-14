@@ -102,6 +102,11 @@
             self::baseSkeleton($period);
 		}
 
+        /**
+         * @param $login
+         * @param $password
+         * @return mixed
+         */
 		private function callAtomeLogin($login, $password) {
 			// Debug complet de la fonction
 			log::add('sigri_atome', 'debug', '********** Etape 1 - Authentification à l\'API **********');
@@ -154,6 +159,10 @@
             return $jsonResponse;
 		}
 
+        /**
+         * @param $jsonResponse
+         * @return mixed
+         */
         private function retrieveUserDetails($jsonResponse) {
             log::add("sigri_atome", "debug", "********** Récupération des infos utilisateurs **********");
             if ( empty($jsonResponse->subscriptions) ) {
@@ -166,6 +175,10 @@
             return $userDetails;
         }
 
+        /**
+         * @param $jsonResponse
+         * @param $period
+         */
 		private function callAtomeAPI($jsonResponse, $period) {
 			// Debug complet de la fonction
 			log::add('sigri_atome', 'debug', '********** Etape 2 - Récupération des datas énergie **********');
@@ -420,11 +433,17 @@
 			//$this->Save_Atome_Jeedom($period, $response, $start_date);
 		}
 
-        private function insertIndex($i, $json_data, $datetime, $totalConsumption) {
-            $i = $i + 1;
-            $code = $json_data->data[$i]->consumption->code.$i;
-            $index = $json_data->data[$i]->consumption->index.$i;
-            $cost = $json_data->data[$i]->consumption->bill.$i;
+        /**
+         * @param $increment
+         * @param $json_data
+         * @param $datetime
+         * @param $totalConsumption
+         */
+        private function insertIndex($increment, $json_data, $datetime, $totalConsumption) {
+            $increment = $increment + 1;
+            $code = $json_data->data[$increment]->consumption->code.$increment;
+            $index = $json_data->data[$increment]->consumption->index.$increment;
+            $cost = $json_data->data[$increment]->consumption->bill.$increment;
 
             log::add('sigri_atome', 'debug', '$code'.$code.' : ' . $code);
             log::add('sigri_atome', 'debug', '$index'.$code.' : ' . $index);
@@ -432,7 +451,7 @@
             log::add('sigri_atome', 'debug', '************************************');
 
             // Enregistrement de l'heure dans la BDD
-            log::add('sigri_atome', 'debug', 'Enregistrement dans la BDD en cours de l\'heure : '.$i);
+            log::add('sigri_atome', 'debug', 'Enregistrement dans la BDD en cours de l\'heure : '.$increment);
             $sql = 'INSERT INTO sigri_atome_hour (hour, code, total_consumption, index, cost)
                     VALUES (\''.$datetime.'\', \''.$code.'\', \''.$totalConsumption.'\', \''.$index.'\', \''.$cost.'\')
                     ON DUPLICATE KEY UPDATE
@@ -472,10 +491,10 @@
             $this->checkCronAndCreateIfNecessary("cronJournalier", "59 23 * * *");
 		}
 
-        /*****************
-         * PRIVATE METHODS
-         *****************/
-
+        /**
+         * @param $cronName
+         * @param $cronSchedule
+         */
         private function checkCronAndCreateIfNecessary($cronName, $cronSchedule) {
             $cron = cron::byClassAndFunction("sigri_atome", $cronName);
             if (!is_object($cron)) {
@@ -483,7 +502,11 @@
                 $cron = new cron();
                 $cron->setClass("sigri_atome");
                 $cron->setFunction($cronName);
-                $cron->setEnable(1);
+                if ($cronName === "cronMinute") {
+                    $cron->setEnable(1);
+                } else {
+                    $cron->setEnable(0);
+                }
                 $cron->setDeamon(0);
                 $cron->setSchedule($cronSchedule);
                 $cron->save();
@@ -492,6 +515,11 @@
             }
         }
 
+        /**
+         * @param $login
+         * @param $password
+         * @return bool|string
+         */
         private function execCurlLoginCommand($login, $password) {
             $curl = curl_init();
             curl_setopt_array($curl, array(
@@ -522,6 +550,10 @@
             return $response;
         }
 
+        /**
+         * @param $url
+         * @return bool|string
+         */
         private function execCurlCommand($url) {
             $curl = curl_init();
             curl_setopt_array($curl, array(
@@ -562,6 +594,9 @@
             }
         }
 
+        /**
+         * @param $response
+         */
         private function checkWriteRights($response) {
             if (false === is_writable(self::RESOURCES_DIR)) {
                 log::add("sigri_atome", "error", "Le dossier ".self::RESOURCES_DIR." n\"est pas accessible en écriture !");
@@ -577,6 +612,9 @@
             }
         }
 
+        /**
+         * @param $period
+         */
         private function baseSkeleton($period) {
             $eqLogics = eqLogic::byType('sigri_atome');
             foreach ($eqLogics as $eqLogic) {

@@ -152,6 +152,9 @@
 
             log::add('sigri_atome', 'debug', '** 1.2 - Connexion réussie, récupération des informations en cours ... **');
             $jsonResponse = json_decode($response);
+            if (strpos($jsonResponse, "No route found for")) {
+                log::add('sigri_atome', 'error', 'La route API n\'est pas correcte : ' . $jsonResponse);
+            }
             return $jsonResponse;
 		}
 

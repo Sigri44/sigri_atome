@@ -95,13 +95,13 @@
 		public function cronHoraire() {
 			log::add('sigri_atome', 'debug', '********** Etape 0 - Lancement du cronHoraire **********');
             $period = "day";
-            $this->baseSqueleton($period);
+            $this->baseSkeleton($period);
 		}
 
 		public function cronJournalier() {
             log::add('sigri_atome', 'debug', '********** Etape 0 - Lancement du cronHoraire **********');
             $period = "month";
-            $this->baseSqueleton($period);
+            $this->baseSkeleton($period);
 		}
 
 		private function callAtomeLogin($login, $password) {

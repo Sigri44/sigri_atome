@@ -128,24 +128,9 @@
 
             $response = $this->execCurlLoginCommand($login, $password);
 
-            log::add('sigri_atome', 'debug', '$response : ' . $response);
-
-            // Vérification de l'intégrité du JSON
-            $checkJsonIntegrity = json_decode($response);
-
-            if ($checkJsonIntegrity->errors) {
-                log::add('sigri_atome', 'debug', '$response->errors[0] : ' . $checkJsonIntegrity->errors[0]);
-                if ($checkJsonIntegrity->errors[0] == "Login Failed") {
-                    log::add('sigri_atome', 'error', '"Login Failed" à la connexion API, réessayez plus tard...');
-                    die();
-                } else {
-                    log::add('sigri_atome', 'error', 'Erreur à la connexion API : ' . $response);
-                    die();
-                }
-            }
-
             // Enregistrement de la connexion au format JSON
             log::add('sigri_atome', 'debug', '** 1.1 - Enregistrement de la connexion au format JSON **');
+
             // Test de l'écriture sur les fichiers du dossier resources.
             $this->checkWriteRights($response);
 
@@ -218,6 +203,11 @@
             log::add("sigri_atome", "debug", "callAtomeAPI :: call API : ".$urlApi);
 
             $jsonResponse = json_decode($this->execCurlCommand($urlApi));
+
+            if (is_array($jsonResponse)) {
+                log::add('sigri_atome', 'error', '$jsonResponse est un array : ' . $jsonResponse);
+                //die();
+            }
 
 			log::add('sigri_atome', 'debug', '** 2.2 - Récupération des datas énergie en cours ... **');
             // Enregistrement des datas énergie
@@ -543,10 +533,9 @@
             $response = curl_exec($curl);
             $curlError = curl_error($curl);
             curl_close($curl);
-            if ($curlError) {
-                log::add("sigri_atome", "error", "execCurlLoginCommand :: cURL Error #:".$curlError);
-                die();
-            }
+
+            $this->checkJsonIntegrity($response, $curlError);
+
             return $response;
         }
 
@@ -572,25 +561,35 @@
                 CURLOPT_TIMEOUT => 30,
                 CURLOPT_URL => $url
             ));
+
             $response = curl_exec($curl);
             $curlError = curl_error($curl);
             curl_close($curl);
 
+            $this->checkJsonIntegrity($response, $curlError);
+
+            return $response;
+        }
+
+        /**
+         * @param $jsonResponse
+         * @param null $curlError
+         */
+        private function checkJsonIntegrity($jsonResponse, $curlError = null) {
             // Gestion des erreurs
             if ($curlError) {
-                log::add('sigri_atome', 'error', 'execCurlCommand :: cURL Error #:' . $curlError);
+                log::add('sigri_atome', 'error', 'checkJsonIntegrity :: cURL Error #:' . $curlError);
                 die();
-            } elseif (strpos($response, "No route found for")) {
-                log::add('sigri_atome', 'error', 'execCurlCommand :: La route API n\'est pas correcte : ' . $response);
+            } elseif (strpos($jsonResponse, "No route found for")) {
+                log::add('sigri_atome', 'error', 'checkJsonIntegrity :: La route API n\'est pas correcte : ' . $jsonResponse);
                 die();
-            } elseif (strpos($response, "Login failed")) {
-                log::add('sigri_atome', 'error', 'execCurlCommand :: Login Failed à la connexion API, réessayez plus tard... : ' . $response);
-            } elseif (json_decode($response) === false) {
-                log::add('sigri_atome', 'error', 'execCurlCommand :: JSON false : $response : ' . print_r(json_decode($response), true));
+            } elseif (strpos($jsonResponse, "Login failed")) {
+                log::add('sigri_atome', 'error', 'checkJsonIntegrity :: Login Failed à la connexion API, réessayez plus tard... : ' . $jsonResponse);
+            } elseif (json_decode($jsonResponse) === false) {
+                log::add('sigri_atome', 'error', 'checkJsonIntegrity :: JSON false : $jsonResponse : ' . print_r(json_decode($jsonResponse), true));
                 die();
             } else {
-                log::add('sigri_atome', 'debug', '$response : ' . $response);
-                return $response;
+                log::add('sigri_atome', 'debug', 'checkJsonIntegrity :: $jsonResponse : ' . $jsonResponse);
             }
         }
 

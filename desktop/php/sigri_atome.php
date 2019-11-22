@@ -95,24 +95,6 @@
                         <label class="checkbox-inline"><input type="checkbox" data-label-text="{{NewAPi}}" class="eqLogicAttr" data-l1key="configuration" data-l2key="isNewApi" checked></label>
                     </div>
                 </div>
-				<div class="form-group">
-					<label class="col-sm-3 control-label">{{Vider les tables SQL à la désinstallation ?}}</label>
-					<div class="col-sm-3">
-						<label class="checkbox-inline"><input type="checkbox" data-label-text="{{DropDatabase}}" class="eqLogicAttr" data-l1key="configuration" data-l2key="isDrop"></label>
-					</div>
-				</div>
-				<div class="form-group">
-					<label class="col-sm-3 control-label">{{Enregistrer le résultat en BDD ?}}</label>
-					<div class="col-sm-3">
-						<label class="checkbox-inline"><input type="checkbox" data-label-text="{{SaveIntoDatabase}}" class="eqLogicAttr" data-l1key="configuration" data-l2key="saveIntoDatabase" checked></label>
-					</div>
-				</div>
-				<div class="form-group">
-					<label class="col-sm-3 control-label">{{Enregistrer le résultat en JSON ?}}</label>
-					<div class="col-sm-3">
-						<label class="checkbox-inline"><input type="checkbox" data-label-text="{{SaveIntoJson}}" class="eqLogicAttr" data-l1key="configuration" data-l2key="saveIntoJson"></label>
-					</div>
-				</div>
 			</fieldset>
 		</form>
 		
@@ -136,7 +118,6 @@
 				</div>
 			</fieldset>
 		</form>
-		
 	</div>
 </div>
 

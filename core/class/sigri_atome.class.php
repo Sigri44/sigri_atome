@@ -189,9 +189,6 @@
             log::add("sigri_atome", "debug", "callAtomeAPI :: Retrieve user details");
             $userDetails = $this->retrieveUserDetails($jsonResponse);
 
-			// Configuration
-			$STORAGE = "BDD"; // JSON ou BDD
-
 			// Configuration date
 			$TODAY = date("Y-m-d");
 			$NOW = date("Hi");
@@ -200,12 +197,6 @@
             // ********************************************
             // * Etape 2 - Récupération des datas énergie *
             // ********************************************
-
-            // Configuration JSON
-			$timestamp = date_timestamp_get(date_create($TODAY . $NOW)) + 3600;
-    		$DAY_EXPORT = date("d_m_Y_H_i", $timestamp);
-			$JSON_EXPORT_FILENAME = "export_".$period."_".$DAY_EXPORT.".json";  // Nom du fichier JSON à utiliser lors d'un export "API"
-			$JSON_EXPORT_FILE = self::RESOURCES_DIR.$JSON_EXPORT_FILENAME;
 
 			// Configuration de la période à récupérer
 			log::add('sigri_atome', 'debug', '** 2.1 - Configuration de la période à récupérer **');
@@ -230,248 +221,136 @@
 
 			log::add('sigri_atome', 'debug', '** 2.2 - Récupération des datas énergie en cours ... **');
             // Enregistrement des datas énergie
-            if ($STORAGE == "JSON") {
-                log::add('sigri_atome', 'debug', '** 2.3a - Enregistrement des datas énergie au format JSON **');
-                file_put_contents($JSON_EXPORT_FILE, $jsonResponse);
-            } elseif ($STORAGE == "BDD") {
-                log::add('sigri_atome', 'debug', '** 2.3b - Enregistrement des datas énergie en BDD **');
-                if ($period == "hour") {
-                    $event_name = "consominute";
+            log::add('sigri_atome', 'debug', '** 2.3b - Enregistrement des datas énergie **');
+            if ($period == "hour") {
+                $event_name = "consominute";
+                $date_format = "Y-m-d H:i";
+
+                $this->saveAtomeValueEvent($jsonResponse, $event_name, $date_format);
+            } elseif ($period == "day") {
+                if ($isNewApi) {
+                    $event_name = "consoheure";
                     $date_format = "Y-m-d H:i";
 
                     $this->saveAtomeValueEvent($jsonResponse, $event_name, $date_format);
-                } elseif ($period == "day") {
-                    if ($isNewApi) {
-                        $event_name = "consoheure";
-                        $date_format = "Y-m-d H:i";
+                } else {
+                    for ($i = 0; $i<25; $i++) {
+                        // Extraction des data énergie
+                        if ($jsonResponse === false) {
+                            log::add('sigri_atome', 'debug', '$json_data->data['.$i.'] : ' . print_r($jsonResponse->data[$i], true));
+                            die();
+                        }
 
-                        $this->saveAtomeValueEvent($jsonResponse, $event_name, $date_format);
-                    } else {
-                        for ($i = 0; $i<25; $i++) {
-                            // Extraction des data énergie
-                            if ($jsonResponse === false) {
-                                log::add('sigri_atome', 'debug', '$json_data->data['.$i.'] : ' . print_r($jsonResponse->data[$i], true));
+                        $date = substr($jsonResponse->data[$i]->time, 0, 10);
+                        $time = substr($jsonResponse->data[$i]->time, 11, 8);
+                        // Ajout d'1h pour corriger le fuseau horaire
+                        $timestamp = date_timestamp_get(date_create($date . $time)) + 3600;
+                        $datetime = date("Y-m-d H:i:s", $timestamp);
+                        $totalConsumption = $jsonResponse->data[$i]->totalConsumption;
+
+                        // Debug affichage des values
+                        log::add('sigri_atome', 'debug', '************ VALUES ************');
+                        log::add('sigri_atome', 'debug', '$datetime : ' . $datetime);
+                        log::add('sigri_atome', 'debug', '$totalConsumption : ' . $totalConsumption);
+
+                        /* Codes :
+                        HPDE : Heures Pleines Direct Energie
+                        HCDE : Heures Creuses Direct Energie
+                        HSCDE : Heures Super Creuses Direct Energie
+
+                        $code1 = $json_data->data[$i]->consumption->code1;
+                        $code2 = $json_data->data[$i]->consumption->code2;
+                        $code3 = $json_data->data[$i]->consumption->code3;
+                        $code4 = $json_data->data[$i]->consumption->code4; // 4 pour tester la nullité !
+
+                        // $index = 1,2,3 ou 4
+                        // $code = $json_data->data[$i]->consumption->codeX
+                        function checkCodeDE($code, $index) {
+                            $indexName = "index" . $index;
+                            $billName = "bill" . $index;
+                            $index = $json_data->data[$i]->consumption->$indexName;
+                            $bill = $json_data->data[$i]->consumption->$billName;
+
+                            if ($code === "HPDE") {
+                                return array("indexHP" => $index, "costHP" => $bill);
+                            } elseif ($code === "HCDE") {
+                                return array("indexHC" => $index, "costHC" => $bill);
+                            } elseif ($code2 ==== "HSCDE") {
+                                return array("indexHSC" => $index, "costSHC" => $bill);
+                            } else {
+                                log::add('sigri_atome', 'error', '$code2 n\'est pas un code valide : ' . $code2);
                                 die();
                             }
-
-                            /*
-                            for ($c = 1; $c < 6; $c++) {
-                                $key = "code".$c;
-                                log::add('sigri_atome', 'debug', '$key : ' . $key);
-                                $resultCode = $json_data->data[$i]->consumption->$key;
-                                if ($resultCode === false) {
-                                    die();
-                                } else {
-                                    $sql = 'INSERT INTO sigri_atome_config (key, value) VALUES (\'$code'.$i.'\', \''.$resultCode.'\') ';
-                                    log::add('sigri_atome', 'debug', 'RQT $sql : ' . $sql);
-                                    DB::Prepare($sql, array(), DB::FETCH_TYPE_ALL);
-                                    log::add('sigri_atome', 'debug', 'Insertion SQL réussie pour la clé : ' . $key);
-                                }
-                            }
-
-                            die();
-                            */
-
-                            // Enregistrement en BDD si value n'existe pas.
-                            /*
-                            $sql = 'INSERT INTO sigri_atome_config (key, value) VALUES (\'CleMamen\', \'Valeure\') ON DUPLICATE KEY UPDATE
-                            key = CASE
-                                WHEN key <=\''.$code1.'\'
-                                THEN \''.$code1.'\'
-                                ELSE key
-                                END,
-                            value = CASE
-                                WHEN value <=\''.$code2.'\'
-                                THEN \''.$code2.'\'
-                                ELSE value
-                                END';
-                            log::add('sigri_atome', 'debug', 'RQT $sql : ' . $sql);
-                            DB::Prepare($sql, array(), DB::FETCH_TYPE_ALL);
-                            */
-
-                            $date = substr($jsonResponse->data[$i]->time, 0, 10);
-                            $time = substr($jsonResponse->data[$i]->time, 11, 8);
-                            // Ajout d'1h pour corriger le fuseau horaire
-                            $timestamp = date_timestamp_get(date_create($date . $time)) + 3600;
-                            $datetime = date("Y-m-d H:i:s", $timestamp);
-                            $totalConsumption = $jsonResponse->data[$i]->totalConsumption;
-
-                            // Debug affichage des values SQL
-                            log::add('sigri_atome', 'debug', '************ VALUES SQL ************');
-                            log::add('sigri_atome', 'debug', '$datetime : ' . $datetime);
-                            log::add('sigri_atome', 'debug', '$totalConsumption : ' . $totalConsumption);
-
-                            $this->insertIndex($i, $jsonResponse, $datetime, $totalConsumption);
-
-                            /* Codes :
-                            HPDE : Heures Pleines Direct Energie
-                            HCDE : Heures Creuses Direct Energie
-                            HSCDE : Heures Super Creuses Direct Energie
-
-                            $code1 = $json_data->data[$i]->consumption->code1;
-                            $code2 = $json_data->data[$i]->consumption->code2;
-                            $code3 = $json_data->data[$i]->consumption->code3;
-                            $code4 = $json_data->data[$i]->consumption->code4; // 4 pour tester la nullité !
-
-                            // $index = 1,2,3 ou 4
-                            // $code = $json_data->data[$i]->consumption->codeX
-                            function checkCodeDE($code, $index) {
-                                $indexName = "index" . $index;
-                                $billName = "bill" . $index;
-                                $index = $json_data->data[$i]->consumption->$indexName;
-                                $bill = $json_data->data[$i]->consumption->$billName;
-
-                                if ($code === "HPDE") {
-                                    return array("indexHP" => $index, "costHP" => $bill);
-                                } elseif ($code === "HCDE") {
-                                    return array("indexHC" => $index, "costHC" => $bill);
-                                } elseif ($code2 ==== "HSCDE") {
-                                    return array("indexHSC" => $index, "costSHC" => $bill);
-                                } else {
-                                    log::add('sigri_atome', 'error', '$code2 n\'est pas un code valide : ' . $code2);
-                                    die();
-                                }
-                            }
-                            */
-
-
-                            /*
-                            // Debug affichage des values SQL
-                            log::add('sigri_atome', 'debug', '************ VALUES SQL ************');
-                            log::add('sigri_atome', 'debug', '$datetime : ' . $datetime);
-                            log::add('sigri_atome', 'debug', '$totalConsumption : ' . $totalConsumption);
-                            log::add('sigri_atome', 'debug', '$indexHP : ' . $indexHP);
-                            log::add('sigri_atome', 'debug', '$indexHC : ' . $indexHC);
-                            log::add('sigri_atome', 'debug', '$costHP : ' . $costHP);
-                            log::add('sigri_atome', 'debug', '$costHC : ' . $costHC);
-                            log::add('sigri_atome', 'debug', '************************************');
-
-                            die();
-                            */
-
-                            /*
-                            // Enregistrement de l'heure dans la BDD
-                            log::add('sigri_atome', 'debug', 'Enregistrement dans la BDD en cours de l\'heure : '.$i);
-                            //$sql = 'INSERT INTO sigri_atome_hour (hour, total_consumption, index_hp, index_hc, cost_hp, cost_hc) VALUES (\''.$datetime.'\', \''.$totalConsumption.'\', \''.$indexHP.'\', \''.$indexHC.'\', \''.$costHP.'\', \''.$costHC.'\') ON DUPLICATE KEY UPDATE total_consumption='.$totalConsumption.', index_hp='.$indexHP.', index_hc='.$indexHC.', cost_hp='.$costHP.', cost_hc='.$costHC;
-                            //$sql = 'INSERT INTO sigri_atome_hour (hour, total_consumption, index_hp, index_hc, cost_hp, cost_hc) VALUES (\''.$datetime.'\', \''.$totalConsumption.'\', \''.$indexHP.'\', \''.$indexHC.'\', \''.$costHP.'\', \''.$costHC.'\') ON DUPLICATE KEY UPDATE hour="'.$datetime.'"';
-                            $sql = 'INSERT INTO sigri_atome_hour (hour, total_consumption, index_hp, index_hc, cost_hp, cost_hc) VALUES (\''.$datetime.'\', \''.$totalConsumption.'\', \''.$indexHP.'\', \''.$indexHC.'\', \''.$costHP.'\', \''.$costHC.'\') ON DUPLICATE KEY UPDATE total_consumption = CASE WHEN total_consumption <=\''.$totalConsumption.'\' THEN \''.$totalConsumption.'\' ELSE total_consumption END, index_hp = CASE WHEN index_hp <=\''.$indexHP.'\' THEN \''.$indexHP.'\' ELSE index_hp END, index_hc = CASE WHEN index_hc <=\''.$indexHC.'\' THEN \''.$indexHC.'\' ELSE index_hc END, cost_hp = CASE WHEN cost_hp <=\''.$costHP.'\' THEN \''.$costHP.'\' ELSE cost_hp END, cost_hc = CASE WHEN cost_hc <=\''.$costHC.'\' THEN \''.$costHC.'\' ELSE cost_hc END';
-                            log::add('sigri_atome', 'debug', 'RQT $sql : ' . $sql);
-                            DB::Prepare($sql, array(), DB::FETCH_TYPE_ALL);
-
-                            // Historisation de la valeur dans Jeedom
-                            $cmd = $this->getCmd(null, 'consoheure');
-                            $totalConsumption = $totalConsumption / 1000;
-                            log::add('sigri_atome', 'debug', 'Date : : ' . $datetime . ' : Indice : ' . $totalConsumption . ' kWh');
-                            log::add('sigri_atome', 'debug', '**************** FIN ***************');
-
-                            $cmd->event($totalConsumption, $datetime);
-                            */
                         }
-                    }
-                } elseif ($period == "month") {
-                    if ($isNewApi) {
-                        $event_name = "consojour";
-                        $date_format = "Y-m-d";
+                        */
 
-                        $this->saveAtomeValueEvent($jsonResponse, $event_name, $date_format);
-                    } else {
-                        for ($i = 0; $i<31; $i++) {
-                            log::add('sigri_atome', 'debug', '$json_data->data[$i] : ' . $jsonResponse->data[$i]);
+                        /*
+                        // Debug affichage des values
+                        log::add('sigri_atome', 'debug', '************ VALUES ************');
+                        log::add('sigri_atome', 'debug', '$datetime : ' . $datetime);
+                        log::add('sigri_atome', 'debug', '$totalConsumption : ' . $totalConsumption);
+                        log::add('sigri_atome', 'debug', '$indexHP : ' . $indexHP);
+                        log::add('sigri_atome', 'debug', '$indexHC : ' . $indexHC);
+                        log::add('sigri_atome', 'debug', '$costHP : ' . $costHP);
+                        log::add('sigri_atome', 'debug', '$costHC : ' . $costHC);
+                        log::add('sigri_atome', 'debug', '*********************************');
 
-                            $date = date("Y-m-d", strtotime(date("Y-m-d", strtotime(substr($jsonResponse->data[$i]->time, 0, 10))) . " +1 day"));
-                            $totalConsumption = $jsonResponse->data[$i]->totalConsumption;
-                            $indexHP = $jsonResponse->data[$i]->consumption->index2;
-                            $indexHC = $jsonResponse->data[$i]->consumption->index1;
-                            $costHP = $jsonResponse->data[$i]->consumption->bill2;
-                            $costHC = $jsonResponse->data[$i]->consumption->bill1;
+                        die();
+                        */
 
-                            // Debug affichage des values SQL
-                            log::add('sigri_atome', 'debug', $i.' - ************ VALUES SQL ************');
-                            log::add('sigri_atome', 'debug', $i.' - $date : ' . $date);
-                            log::add('sigri_atome', 'debug', $i.' - $totalConsumption : ' . $totalConsumption);
-                            log::add('sigri_atome', 'debug', $i.' - $indexHP : ' . $indexHP);
-                            log::add('sigri_atome', 'debug', $i.' - $indexHC : ' . $indexHC);
-                            log::add('sigri_atome', 'debug', $i.' - $costHP : ' . $costHP);
-                            log::add('sigri_atome', 'debug', $i.' - $costHC : ' . $costHC);
-                            log::add('sigri_atome', 'debug', $i.' - ************************************');
-                            if ($indexHC == "0" && $indexHP == "0") {
-                                log::add('sigri_atome', 'debug', '$indexHC && $indexHP sont égaux à 0 !!');
-                            }
+                        /*
+                        // Historisation de la valeur dans Jeedom
+                        $cmd = $this->getCmd(null, 'consoheure');
+                        $totalConsumption = $totalConsumption / 1000;
+                        log::add('sigri_atome', 'debug', 'Date : : ' . $datetime . ' : Indice : ' . $totalConsumption . ' kWh');
+                        log::add('sigri_atome', 'debug', '**************** FIN ***************');
 
-                            // Enregistrement du jour dans la BDD
-                            log::add('sigri_atome', 'debug', 'Enregistrement dans la BDD en cours du jour : '.$i);
-                            //$sql = 'INSERT INTO sigri_atome_day (day, total_consumption, index_hp, index_hc, cost_hp, cost_hc) VALUES (\''.$date.'\', \''.$totalConsumption.'\', \''.$indexHP.'\', \''.$indexHC.'\', \''.$costHP.'\', \''.$costHC.'\') ON DUPLICATE KEY UPDATE total_consumption='.$totalConsumption.', index_hp='.$indexHP.', index_hc='.$indexHC.', cost_hp='.$costHP.', cost_hc='.$costHC;
-                            //$sql = 'INSERT INTO sigri_atome_day (day, total_consumption, index_hp, index_hc, cost_hp, cost_hc) VALUES (\''.$date.'\', \''.$totalConsumption.'\', \''.$indexHP.'\', \''.$indexHC.'\', \''.$costHP.'\', \''.$costHC.'\') ON DUPLICATE KEY UPDATE day = "'.$date.'"';
-                            $sql = 'INSERT INTO sigri_atome_day (day, total_consumption, index_hp, index_hc, cost_hp, cost_hc) VALUES (\''.$date.'\', \''.$totalConsumption.'\', \''.$indexHP.'\', \''.$indexHC.'\', \''.$costHP.'\', \''.$costHC.'\') ON DUPLICATE KEY UPDATE total_consumption = CASE WHEN total_consumption <=\''.$totalConsumption.'\' THEN \''.$totalConsumption.'\' ELSE total_consumption END, index_hp = CASE WHEN index_hp <=\''.$indexHP.'\' THEN \''.$indexHP.'\' ELSE index_hp END, index_hc = CASE WHEN index_hc <=\''.$indexHC.'\' THEN \''.$indexHC.'\' ELSE index_hc END, cost_hp = CASE WHEN cost_hp <=\''.$costHP.'\' THEN \''.$costHP.'\' ELSE cost_hp END, cost_hc = CASE WHEN cost_hc <=\''.$costHC.'\' THEN \''.$costHC.'\' ELSE cost_hc END';
-                            log::add('sigri_atome', 'debug', $i.' - RQT $sql : ' . $sql);
-                            DB::Prepare($sql, array(), DB::FETCH_TYPE_ALL);
-
-                            // Historisation de la valeur dans Jeedom
-                            $cmd = $this->getCmd(null, 'consojour');
-                            $totalConsumption = $totalConsumption / 1000;
-                            log::add('sigri_atome', 'debug', $i.' - Date : ' . $date . ' : Indice : ' . $totalConsumption . ' kWh');
-                            $cmd->event($totalConsumption, $date);
-                        }
+                        $cmd->event($totalConsumption, $datetime);
+                        */
                     }
                 }
-            } else {
-                log::add('sigri_atome', 'error', '** 2.3 - Aucun mode d\'enregistrement n\'as été choisi ! **');
-                die();
+            } elseif ($period == "month") {
+                if ($isNewApi) {
+                    $event_name = "consojour";
+                    $date_format = "Y-m-d";
+
+                    $this->saveAtomeValueEvent($jsonResponse, $event_name, $date_format);
+                } else {
+                    for ($i = 0; $i < 31; $i++) {
+                        log::add('sigri_atome', 'debug', '$json_data->data[$i] : ' . $jsonResponse->data[$i]);
+
+                        $date = date("Y-m-d", strtotime(date("Y-m-d", strtotime(substr($jsonResponse->data[$i]->time, 0, 10))) . " +1 day"));
+                        $totalConsumption = $jsonResponse->data[$i]->totalConsumption;
+                        $indexHP = $jsonResponse->data[$i]->consumption->index2;
+                        $indexHC = $jsonResponse->data[$i]->consumption->index1;
+                        $costHP = $jsonResponse->data[$i]->consumption->bill2;
+                        $costHC = $jsonResponse->data[$i]->consumption->bill1;
+
+                        // Debug affichage des values
+                        log::add('sigri_atome', 'debug', $i . ' - ************ VALUES ************');
+                        log::add('sigri_atome', 'debug', $i . ' - $date : ' . $date);
+                        log::add('sigri_atome', 'debug', $i . ' - $totalConsumption : ' . $totalConsumption);
+                        log::add('sigri_atome', 'debug', $i . ' - $indexHP : ' . $indexHP);
+                        log::add('sigri_atome', 'debug', $i . ' - $indexHC : ' . $indexHC);
+                        log::add('sigri_atome', 'debug', $i . ' - $costHP : ' . $costHP);
+                        log::add('sigri_atome', 'debug', $i . ' - $costHC : ' . $costHC);
+                        log::add('sigri_atome', 'debug', $i . ' - ********************************');
+                        if ($indexHC == "0" && $indexHP == "0") {
+                            log::add('sigri_atome', 'debug', '$indexHC && $indexHP sont égaux à 0 !!');
+                        }
+
+                        // Historisation de la valeur dans Jeedom
+                        $cmd = $this->getCmd(null, 'consojour');
+                        $totalConsumption = $totalConsumption / 1000;
+                        log::add('sigri_atome', 'debug', $i . ' - Date : ' . $date . ' : Indice : ' . $totalConsumption . ' kWh');
+                        $cmd->event($totalConsumption, $date);
+                    }
+                }
             }
 			log::add('sigri_atome', 'debug', '********** Etape 3 - Fin du Cron, tout s\'est bien déroulé ! **********');
 			// Enregistrement des values dans Jeedom
 			//$this->Save_Atome_Jeedom($period, $response, $start_date);
 		}
-
-        /**
-         * @param $increment
-         * @param $json_data
-         * @param $datetime
-         * @param $totalConsumption
-         */
-        private function insertIndex($increment, $json_data, $datetime, $totalConsumption) {
-            $increment = $increment + 1;
-            $code = $json_data->data[$increment]->consumption->code.$increment;
-            $index = $json_data->data[$increment]->consumption->index.$increment;
-            $cost = $json_data->data[$increment]->consumption->bill.$increment;
-
-            log::add('sigri_atome', 'debug', '$code'.$code.' : ' . $code);
-            log::add('sigri_atome', 'debug', '$index'.$code.' : ' . $index);
-            log::add('sigri_atome', 'debug', '$cost'.$code.' : ' . $cost);
-            log::add('sigri_atome', 'debug', '************************************');
-
-            // Enregistrement de l'heure dans la BDD
-            log::add('sigri_atome', 'debug', 'Enregistrement dans la BDD en cours de l\'heure : '.$increment);
-            $sql = 'INSERT INTO sigri_atome_hour (hour, code, total_consumption, index, cost)
-                    VALUES (\''.$datetime.'\', \''.$code.'\', \''.$totalConsumption.'\', \''.$index.'\', \''.$cost.'\')
-                    ON DUPLICATE KEY UPDATE
-                    total_consumption = CASE
-                        WHEN total_consumption <=\''.$totalConsumption.'\'
-                        THEN \''.$totalConsumption.'\'
-                        ELSE total_consumption END,
-                    index = CASE
-                        WHEN index <=\''.$index.'\'
-                        THEN \''.$index.'\'
-                        ELSE index END,
-                    code = CASE
-                        WHEN code =\''.$code.'\'
-                        THEN \''.$code.'\'
-                        ELSE code END,
-                    cost = CASE
-                        WHEN cost <=\''.$cost.'\'
-                        THEN \''.$cost.'\'
-                        ELSE cost END';
-            log::add('sigri_atome', 'debug', 'RQT $sql : ' . $sql);
-            DB::Prepare($sql, array(), DB::FETCH_TYPE_ALL);
-
-            // Historisation de la valeur dans Jeedom
-            $cmd = $this->getCmd(null, 'consoheure');
-            $totalConsumption = $totalConsumption / 1000;
-            log::add('sigri_atome', 'debug', 'Date : : ' . $datetime . ' : Indice : ' . $totalConsumption . ' kWh');
-            log::add('sigri_atome', 'debug', '**************** FIN ***************');
-
-            $cmd->event($totalConsumption, $datetime);
-        }
 
         /* INSTALLATION DES CRONS */
 		public function CronIsInstall() {
@@ -587,6 +466,8 @@
                 log::add('sigri_atome', 'error', 'checkJsonIntegrity :: La route API n\'est pas correcte : ' . $jsonResponse);
                 die();
             } elseif (strpos($jsonResponse, "Login failed")) {
+                log::add('sigri_atome', 'error', 'checkJsonIntegrity :: Login failed à la connexion API, réessayez plus tard... : ' . $jsonResponse);
+            } elseif (strpos($jsonResponse, "Login Failed")) {
                 log::add('sigri_atome', 'error', 'checkJsonIntegrity :: Login Failed à la connexion API, réessayez plus tard... : ' . $jsonResponse);
             } elseif (json_decode($jsonResponse) === false) {
                 log::add('sigri_atome', 'error', 'checkJsonIntegrity :: JSON false : $jsonResponse : ' . print_r(json_decode($jsonResponse), true));
@@ -659,15 +540,9 @@
                 }
                 if (!empty($eqLogic->getConfiguration("identifiant")) && !empty($eqLogic->getConfiguration("password"))) {
                     $isNewApi = $eqLogic->getConfiguration('isNewApi', 0);
-                    $isDrop = $eqLogic->getConfiguration("isDrop", 0);
-                    $saveIntoDatabase = $eqLogic->getConfiguration("saveIntoDatabase", 0);
-                    $saveIntoJson = $eqLogic->getConfiguration("saveIntoJson", 0);
 
                     // Get values for Debug
                     log::add("sigri_atome", "debug", '$isNewApi : ' . $isNewApi);
-                    log::add("sigri_atome", "debug", '$isDrop : ' . $isDrop);
-                    log::add("sigri_atome", "debug", '$saveIntoDatabase : ' . $saveIntoDatabase);
-                    log::add("sigri_atome", "debug", '$saveIntoJson : ' . $saveIntoJson);
 
                     $jsonResponse = $eqLogic->callAtomeLogin($eqLogic->getConfiguration("identifiant"), $eqLogic->getConfiguration("password"));
                     $eqLogic->callAtomeAPI($jsonResponse, $period, $isNewApi);

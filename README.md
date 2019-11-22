@@ -10,11 +10,11 @@
 ## Installation :
 - Jeedom : Plugins > Gestion des plugins > Plugins (+)
 
-![Jeedom](https://raw.githubusercontent.com/Sigri44/sigri_atome/master/master/doc/images/jeedom.png)
+![Jeedom](https://raw.githubusercontent.com/Sigri44/sigri_atome/master/doc/images/jeedom.png)
 
 - Nextdom : Plugins > Gestion & Markets > Autre Sources (+)
 
-![Nextdom](https://raw.githubusercontent.com/Sigri44/sigri_atome/master/master/doc/images/nextdom.png)
+![Nextdom](https://raw.githubusercontent.com/Sigri44/sigri_atome/master/doc/images/nextdom.png)
 
 Branche :
 - V3 : jeedom-v3

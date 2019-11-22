@@ -7,7 +7,7 @@
 ## Versions history
 [Changelog](https://github.com/Sigri44/sigri_atome/blob/master/Changelog.md)
 
-## Installation :
+## Installation
 - Jeedom : Plugins > Gestion des plugins > Plugins (+)
 
 ![Jeedom](https://raw.githubusercontent.com/Sigri44/sigri_atome/master/doc/images/jeedom.png)

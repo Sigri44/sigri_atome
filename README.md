@@ -1,24 +1,23 @@
 # Jeedom_Sigri_Atome
 [JEEDOM] sigri_atome : Ce plugin utilise l'API Atome pour obtenir les informations de votre consommation depuis votre compteur Linky 
 
-## Next Features
-- ~~Update module Jeedom/NextDom compatibility~~
-- ~~Connection with BDD~~
-- ~~Update day/week/month via crontab~~
-- ~~Add new method to manage cookie~~
-- ~~Not Update if NewValue < OldValue~~
-- Select old period
-- ~~Add month/year command~~
-- Add Backup/Export DB (SQL)
-- Add Import/Restore DB (SQL)
-- ~~Update form to JD 3.X~~
-- Add option to add event value
+## Next features
+- Waiting for new API route
 
-## Versions
+## Versions history
+[Changelog](https://github.com/Sigri44/sigri_atome/blob/master/Changelog.md)
 
-### - v 0.1 (alpha) :
-- Connect API login
-- Connect API data
-- Connect database
-- Option save into JSON
-- Save into cookie file
+## Installation
+- Jeedom : Plugins > Gestion des plugins > Plugins (+)
+
+![Jeedom](https://raw.githubusercontent.com/Sigri44/sigri_atome/master/doc/images/jeedom.png)
+
+- Nextdom : Plugins > Gestion & Markets > Autre Sources (+)
+
+![Nextdom](https://raw.githubusercontent.com/Sigri44/sigri_atome/master/doc/images/nextdom.png)
+
+Branche :
+- V3 : jeedom-v3
+- V4 : jeedom-v4
+
+/!\ DO NOT USE "master" BRANCH !! It's for dev/Git /!\

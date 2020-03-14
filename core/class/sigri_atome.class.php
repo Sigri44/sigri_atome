@@ -460,7 +460,7 @@
         private function checkJsonIntegrity($jsonResponse, $curlError = null) {
             // Gestion des erreurs
             if ($curlError) {
-                log::add('sigri_atome', 'debug', 'checkJsonIntegrity :: cURL Error # :' . $curlError);
+                log::add('sigri_atome', 'debug', 'checkJsonIntegrity :: cURL Error # : ' . $curlError);
                 die();
             } elseif (strpos($jsonResponse, "No route found for")) {
                 log::add('sigri_atome', 'error', 'checkJsonIntegrity :: La route API n\'est pas correcte : ' . $jsonResponse);

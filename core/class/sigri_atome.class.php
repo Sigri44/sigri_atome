@@ -167,7 +167,7 @@
         private function retrieveUserDetails($jsonResponse) {
             log::add("sigri_atome", "debug", "********** Récupération des infos utilisateurs **********");
             if ( empty($jsonResponse->subscriptions) ) {
-                log::add("sigri_atome", "error", "No information found from user");
+                log::add("sigri_atome", "debug", "No information found from user");
                 die();
             }
             $userDetails["id"] = $jsonResponse->id;
@@ -466,9 +466,9 @@
                 log::add('sigri_atome', 'error', 'checkJsonIntegrity :: La route API n\'est pas correcte : ' . $jsonResponse);
                 die();
             } elseif (strpos($jsonResponse, "Login failed")) {
-                log::add('sigri_atome', 'error', 'checkJsonIntegrity :: Login failed à la connexion API, réessayez plus tard... : ' . $jsonResponse);
+                log::add('sigri_atome', 'debug', 'checkJsonIntegrity :: Login failed à la connexion API, réessayez plus tard... : ' . $jsonResponse);
             } elseif (strpos($jsonResponse, "Login Failed")) {
-                log::add('sigri_atome', 'error', 'checkJsonIntegrity :: Login Failed à la connexion API, réessayez plus tard... : ' . $jsonResponse);
+                log::add('sigri_atome', 'debug', 'checkJsonIntegrity :: Login Failed à la connexion API, réessayez plus tard... : ' . $jsonResponse);
             } elseif (json_decode($jsonResponse) === false) {
                 log::add('sigri_atome', 'error', 'checkJsonIntegrity :: JSON false : $jsonResponse : ' . print_r(json_decode($jsonResponse), true));
                 die();
